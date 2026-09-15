@@ -33,13 +33,18 @@
         <p class="auth-desc">Sign in to manage Furqan Naveed's portfolio data, projects, and contact inquiries.</p>
       </div>
 
-      <div class="auth-hint">
-        <i class="ri-information-line"></i>
-        <div>
-          <span>Default credentials:</span><br>
-          Username: <code>admin</code> or <code>furqannaveed377@gmail.com</code><br>
-          Password: <code>admin123</code>
+      <div class="auth-hint" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+          <i class="ri-information-line" style="font-size: 1.25rem;"></i>
+          <div>
+            <span>Default credentials:</span><br>
+            Username: <code>admin</code> (or <code>furqannaveed377@gmail.com</code>)<br>
+            Password: <code>admin123</code>
+          </div>
         </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="autofill-creds-btn" style="white-space: nowrap;">
+          <i class="ri-magic-line"></i> Fill Credentials
+        </button>
       </div>
 
       <form id="login-form">
@@ -819,10 +824,47 @@
 
   <!-- ==================== ADMIN JAVASCRIPT ==================== -->
   <script>
+    // Safe Token Storage Helper (handles iframe sandbox and strict partitioned storage)
+    function getStoredToken() {
+      try {
+        return localStorage.getItem('fn_admin_token') || sessionStorage.getItem('fn_admin_token') || null;
+      } catch (e) {
+        return null;
+      }
+    }
+    function setStoredToken(token) {
+      try {
+        localStorage.setItem('fn_admin_token', token);
+      } catch (e) {}
+      try {
+        sessionStorage.setItem('fn_admin_token', token);
+      } catch (e) {}
+    }
+    function removeStoredToken() {
+      try {
+        localStorage.removeItem('fn_admin_token');
+      } catch (e) {}
+      try {
+        sessionStorage.removeItem('fn_admin_token');
+      } catch (e) {}
+    }
+
     // State
-    let authToken = localStorage.getItem('fn_admin_token') || null;
+    let authToken = getStoredToken();
     let portfolioData = null;
     let contactMessages = [];
+
+    // Autofill default credentials button
+    const autofillBtn = document.getElementById('autofill-creds-btn');
+    if (autofillBtn) {
+      autofillBtn.addEventListener('click', () => {
+        document.getElementById('login-username').value = 'admin';
+        document.getElementById('login-password').value = 'admin123';
+        const err = document.getElementById('login-error');
+        if (err) err.style.display = 'none';
+        showToast('Credentials filled! Click "Access Admin Suite" to log in.');
+      });
+    }
 
     // Toast Notification helper
     function showToast(message, type = 'success') {
@@ -935,7 +977,7 @@
           loadPortfolioData();
           loadMessages();
         } else {
-          localStorage.removeItem('fn_admin_token');
+          removeStoredToken();
           authToken = null;
           showLoginScreen();
         }
@@ -959,7 +1001,7 @@
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
-      const password = document.getElementById('login-password').value;
+      const password = document.getElementById('login-password').value.trim();
       const errorEl = document.getElementById('login-error');
       errorEl.style.display = 'none';
 
@@ -973,7 +1015,7 @@
         const data = await res.json();
         if (res.ok && data.token) {
           authToken = data.token;
-          localStorage.setItem('fn_admin_token', authToken);
+          setStoredToken(authToken);
           showToast('Welcome back, Furqan! Admin access granted.');
           showAdminPanel();
           loadPortfolioData();
@@ -997,7 +1039,7 @@
         });
       } catch (e) {}
 
-      localStorage.removeItem('fn_admin_token');
+      removeStoredToken();
       authToken = null;
       showToast('Logged out successfully.');
       showLoginScreen();

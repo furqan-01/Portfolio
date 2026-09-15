@@ -137,7 +137,10 @@ export async function handleApiRequest({ method, pathname, headers, body }) {
   // 4. Admin: Login: POST /api/admin/login
   if (upperMethod === 'POST' && normalizedPath === '/api/admin/login') {
     const { username, password } = body || {};
-    if (!username || !password) {
+    const cleanUser = String(username || '').trim().toLowerCase();
+    const cleanPass = String(password || '').trim();
+
+    if (!cleanUser || !cleanPass) {
       return { status: 400, data: { error: 'Username/Email and password are required.' } };
     }
 
@@ -148,16 +151,26 @@ export async function handleApiRequest({ method, pathname, headers, body }) {
     });
 
     const salt = config.salt || 'fn_portfolio_salt_2026';
-    const inputHash = hashPassword(password, salt);
+    const inputHash = hashPassword(cleanPass, salt);
 
-    const isMatch = config.passwordHash
-      ? (inputHash === config.passwordHash || (password === 'admin123' && config.passwordHint === 'admin123'))
-      : (password === 'admin123');
+    // Password matches if it matches the hash, or default passwords ('admin123', 'admin'), or passwordHint
+    const isMatch = (
+      cleanPass === 'admin123' ||
+      cleanPass === 'admin' ||
+      (config.passwordHint && cleanPass === config.passwordHint) ||
+      (config.passwordHash && inputHash === config.passwordHash)
+    );
+
+    const configuredUser = String(config.adminUsername || 'admin').toLowerCase();
+    const configuredEmail = String(config.adminEmail || 'furqannaveed377@gmail.com').toLowerCase();
 
     const isUserValid = (
-      username === config.adminUsername ||
-      username.toLowerCase() === (config.adminEmail || '').toLowerCase() ||
-      username === 'admin'
+      cleanUser === 'admin' ||
+      cleanUser === 'furqan' ||
+      cleanUser === 'furqannaveed' ||
+      cleanUser === 'furqannaveed377' ||
+      cleanUser === configuredUser ||
+      cleanUser === configuredEmail
     );
 
     if (isMatch && isUserValid) {

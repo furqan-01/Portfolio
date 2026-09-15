@@ -1038,12 +1038,17 @@
 
       <!--==================== FOOTER ====================-->
       <footer class="footer">
-         <div class="footer__container container grid">
+         <div class="footer__container container grid" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <p class="footer__copy">
                All Rights Reserved By <span>Furqan Naveed</span> • Software Engineering & Full-Stack Development
             </p>
 
-            <span class="footer__year" id="footer-year">&#169; 2025 Furqan Naveed</span>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+               <a href="/admin" class="footer__link" style="color: var(--text-color-light); opacity: 0.7; font-size: var(--smaller-font-size); display: inline-flex; align-items: center; gap: 0.35rem;" id="footer-admin-link">
+                  <i class="ri-shield-keyhole-line"></i> Admin Portal
+               </a>
+               <span class="footer__year" id="footer-year">&#169; 2025 Furqan Naveed</span>
+            </div>
          </div>
       </footer>
       
