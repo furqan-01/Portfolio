@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "portfolio": {
+      "title": "Portfolio",
+      "description": "Portfolio content document containing profile, projects, skills, experience, education, and certifications",
+      "type": "object",
+      "properties": {
+        "profile": {
+          "type": "object",
+          "description": "Profile details including name, bio, contacts, and links"
+        },
+        "projects": {
+          "type": "array",
+          "description": "Array of projects"
+        },
+        "skills": {
+          "type": "array",
+          "description": "Array of skill categories and tags"
+        },
+        "experience": {
+          "type": "array",
+          "description": "Array of work experience items"
+        },
+        "education": {
+          "type": "array",
+          "description": "Array of education entries"
+        },
+        "certifications": {
+          "type": "array",
+          "description": "Array of certifications"
+        },
+        "capstone": {
+          "type": "object",
+          "description": "Senior undergraduate engineering capstone project specifications"
+        },
+        "futurePosts": {
+          "type": "array",
+          "description": "Array of future technical posts, publications, and research articles"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when portfolio data was updated"
+        }
+      },
+      "required": ["profile"]
+    },
+    "message": {
+      "title": "Message",
+      "description": "Contact form inquiry message",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Sender name"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Sender email"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Inquiry subject"
+        },
+        "message": {
+          "type": "string",
+          "description": "Inquiry message body"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when message was submitted"
+        },
+        "read": {
+          "type": "boolean",
+          "description": "Read status for admin"
+        }
+      },
+      "required": ["name", "email", "message", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/portfolio/content": {
+      "entity": "portfolio",
+      "description": "Single document holding active portfolio content"
+    },
+    "/messages/{messageId}": {
+      "entity": "message",
+      "description": "Collection of inbound contact inquiries"
+    }
+  }
+}

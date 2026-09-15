@@ -1,0 +1,12 @@
+{
+  "name": "responsive-portfolio-website-anid",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Static app ready'",
+    "start": "node server.js",
+    "lint": "node --check server.js"
+  },
+  "dependencies": {}
+}

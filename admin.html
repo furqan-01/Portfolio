@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Furqan Naveed Portfolio</title>
+  <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Remix Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+  <!-- Admin Styles -->
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ==================== AUTH GATEWAY SCREEN ==================== -->
+  <section class="auth-gate" id="auth-gate">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-badge">
+          <i class="ri-shield-keyhole-line"></i> Protected URL Route
+        </div>
+        <h1 class="auth-title">Admin Gateway</h1>
+        <p class="auth-desc">Sign in to manage Furqan Naveed's portfolio data, projects, and contact inquiries.</p>
+      </div>
+
+      <div class="auth-hint">
+        <i class="ri-information-line"></i>
+        <div>
+          <span>Default credentials:</span><br>
+          Username: <code>admin</code> or <code>furqannaveed377@gmail.com</code><br>
+          Password: <code>admin123</code>
+        </div>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username" class="form-label">Username or Email</label>
+          <div class="input-wrapper">
+            <i class="ri-user-line input-icon"></i>
+            <input type="text" id="login-username" class="form-input" placeholder="admin or furqannaveed377@gmail.com" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password" class="form-label">Password</label>
+          <div class="input-wrapper">
+            <i class="ri-lock-2-line input-icon"></i>
+            <input type="password" id="login-password" class="form-input" placeholder="Enter password" required autocomplete="current-password">
+            <button type="button" class="toggle-password" id="toggle-password-btn" aria-label="Toggle password visibility">
+              <i class="ri-eye-line" id="toggle-password-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="login-error" style="color: var(--admin-danger); font-size: 0.8rem; margin-bottom: 1rem; display: none;"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+          <i class="ri-login-box-line"></i> Access Admin Suite
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== ADMIN SUITE MAIN LAYOUT ==================== -->
+  <div class="admin-layout" id="admin-layout" style="display: none;">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-monogram">FN</div>
+        <div class="brand-info">
+          <span class="brand-name">Furqan Naveed</span>
+          <span class="brand-role">Portfolio Admin</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Overview</div>
+        <button class="nav-tab-btn active" data-tab="dashboard">
+          <i class="ri-dashboard-line"></i> Dashboard
+        </button>
+
+        <div class="nav-section-title">Content & Portfolio</div>
+        <button class="nav-tab-btn" data-tab="profile">
+          <i class="ri-user-settings-line"></i> Profile & Bio
+        </button>
+        <button class="nav-tab-btn" data-tab="projects">
+          <i class="ri-folders-line"></i> Projects
+        </button>
+        <button class="nav-tab-btn" data-tab="skills">
+          <i class="ri-cpu-line"></i> Skills & Stack
+        </button>
+        <button class="nav-tab-btn" data-tab="experience">
+          <i class="ri-briefcase-line"></i> Work Experience
+        </button>
+        <button class="nav-tab-btn" data-tab="education">
+          <i class="ri-graduation-cap-line"></i> Education & Certs
+        </button>
+        <button class="nav-tab-btn" data-tab="capstone">
+          <i class="ri-rocket-2-line"></i> Capstone & Future Posts
+        </button>
+
+        <div class="nav-section-title">Inbound Inquiries</div>
+        <button class="nav-tab-btn" data-tab="messages">
+          <i class="ri-mail-unread-line"></i> Messages
+          <span class="badge-count" id="unread-messages-count" style="display: none;">0</span>
+        </button>
+
+        <div class="nav-section-title">System</div>
+        <button class="nav-tab-btn" data-tab="settings">
+          <i class="ri-settings-3-line"></i> Security & Backup
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status">
+          <span class="status-dot"></span>
+          <span>Node.js Server: <strong>Port 3000</strong></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+            <i class="ri-menu-line"></i>
+          </button>
+          <h2 class="topbar-title" id="current-tab-title">Dashboard Overview</h2>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="/" target="_blank" class="btn btn-secondary btn-sm" title="View live portfolio in new tab">
+            <i class="ri-external-link-line"></i> View Live Site
+          </a>
+          <button class="btn btn-primary btn-sm" id="topbar-save-btn" onclick="savePortfolioData()">
+            <i class="ri-save-line"></i> Save Changes
+          </button>
+          <button class="btn btn-secondary btn-sm" id="logout-btn" onclick="logoutAdmin()">
+            <i class="ri-logout-box-r-line"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Tab Content Area -->
+      <main class="admin-content">
+
+        <!-- TAB: DASHBOARD -->
+        <div class="tab-pane active" id="tab-dashboard">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Portfolio Overview</h2>
+              <p class="section-subtitle">Real-time stats and content summary of your live portfolio.</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ri-folders-line"></i></div>
+              <div>
+                <div class="stat-value" id="stat-projects-count">0</div>
+                <div class="stat-label">Active Projects</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ri-code-box-line"></i></div>
+              <div>
+                <div class="stat-value" id="stat-skills-count">0</div>
+                <div class="stat-label">Technical Skills</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ri-briefcase-line"></i></div>
+              <div>
+                <div class="stat-value" id="stat-experience-count">0</div>
+                <div class="stat-label">Experience Roles</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="ri-mail-open-line"></i></div>
+              <div>
+                <div class="stat-value" id="stat-messages-count">0</div>
+                <div class="stat-label">Inbound Messages</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title"><i class="ri-flashlight-line"></i> Quick Actions</h3>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button class="btn btn-secondary" onclick="switchTab('projects'); openAddProjectModal();">
+                  <i class="ri-add-circle-line"></i> Add New Portfolio Project
+                </button>
+                <button class="btn btn-secondary" onclick="switchTab('profile')">
+                  <i class="ri-edit-line"></i> Update Bio & Social Links
+                </button>
+                <button class="btn btn-secondary" onclick="switchTab('messages')">
+                  <i class="ri-mail-line"></i> Check Contact Inquiries
+                </button>
+                <a href="/" target="_blank" class="btn btn-secondary">
+                  <i class="ri-eye-line"></i> Preview Public Frontend
+                </a>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title"><i class="ri-server-line"></i> System & Architecture</h3>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.5rem;">
+                  <span style="color: var(--admin-text-muted);">Admin Access Route:</span>
+                  <code style="color: var(--admin-primary);">/admin (Direct URL only)</code>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.5rem;">
+                  <span style="color: var(--admin-text-muted);">Database & Persistence:</span>
+                  <span style="color: var(--admin-success); display: flex; align-items: center; gap: 0.35rem;">
+                    <i class="ri-fire-fill" style="color: #f59e0b;"></i> Firebase Firestore + Local Sync
+                  </span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.5rem;">
+                  <span style="color: var(--admin-text-muted);">Firebase Project:</span>
+                  <code style="color: var(--admin-title);">metal-photon-1lcf1</code>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--admin-border); padding-bottom: 0.5rem;">
+                  <span style="color: var(--admin-text-muted);">Contact Form Endpoint:</span>
+                  <code style="color: var(--admin-title);">POST /api/contact</code>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 0.25rem;">
+                  <span style="color: var(--admin-text-muted);">Public UI Button:</span>
+                  <span style="color: var(--admin-text-muted);"><i class="ri-eye-off-line"></i> Hidden from Public View</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PROFILE & BIO -->
+        <div class="tab-pane" id="tab-profile">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Personal Profile & Bio</h2>
+              <p class="section-subtitle">Edit headline, about summary, contact links, and Calendly integration.</p>
+            </div>
+            <button class="btn btn-primary" onclick="savePortfolioData()">
+              <i class="ri-save-line"></i> Save Profile
+            </button>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-user-line"></i> Identity & Intro</h3>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="profile-name">Full Name</label>
+                <input type="text" id="profile-name" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-role">Professional Headline</label>
+                <input type="text" id="profile-role" class="form-input no-icon">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profile-subtitle">Hero Subtitle</label>
+              <input type="text" id="profile-subtitle" class="form-input no-icon">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profile-about">About Bio Narrative</label>
+              <textarea id="profile-about" class="form-input no-icon" rows="4"></textarea>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-bar-chart-box-line"></i> Highlights & Stats</h3>
+            </div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label" for="profile-exp-years">Experience Years Display</label>
+                <input type="text" id="profile-exp-years" class="form-input no-icon" placeholder="2+">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-proj-completed">Projects Completed</label>
+                <input type="text" id="profile-proj-completed" class="form-input no-icon" placeholder="15+">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-credentials">Verified Credentials</label>
+                <input type="text" id="profile-credentials" class="form-input no-icon" placeholder="4+">
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-links-line"></i> Contact & External Links</h3>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="profile-email">Direct Email</label>
+                <input type="email" id="profile-email" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-phone">WhatsApp / Phone</label>
+                <input type="text" id="profile-phone" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-location">Location</label>
+                <input type="text" id="profile-location" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-calendly">Calendly 1:1 Booking URL</label>
+                <input type="url" id="profile-calendly" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-linkedin">LinkedIn Profile URL</label>
+                <input type="url" id="profile-linkedin" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-github">GitHub Profile URL</label>
+                <input type="url" id="profile-github" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-project-repo">Portfolio Project Repository URL</label>
+                <input type="url" id="profile-project-repo" class="form-input no-icon">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profile-cv">CV PDF Path or URL</label>
+                <input type="text" id="profile-cv" class="form-input no-icon">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PROJECTS -->
+        <div class="tab-pane" id="tab-projects">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Projects Portfolio</h2>
+              <p class="section-subtitle">Manage, create, and update project cards visible on your portfolio.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openAddProjectModal()">
+              <i class="ri-add-line"></i> Add New Project
+            </button>
+          </div>
+
+          <div class="project-admin-list" id="projects-admin-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB: SKILLS -->
+        <div class="tab-pane" id="tab-skills">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Technical Skills & Categories</h2>
+              <p class="section-subtitle">Add or remove skill pills and customize category descriptions.</p>
+            </div>
+            <button class="btn btn-primary" onclick="savePortfolioData()">
+              <i class="ri-save-line"></i> Save Skills
+            </button>
+          </div>
+
+          <div class="form-grid-2" id="skills-admin-container">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB: EXPERIENCE -->
+        <div class="tab-pane" id="tab-experience">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Work & Practical Experience</h2>
+              <p class="section-subtitle">Manage roles, responsibilities, bullet highlights, and tech stacks.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openAddExperienceModal()">
+              <i class="ri-add-line"></i> Add Experience
+            </button>
+          </div>
+
+          <div id="experience-admin-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB: EDUCATION & CERTS -->
+        <div class="tab-pane" id="tab-education">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Education & Certifications</h2>
+              <p class="section-subtitle">Update university degrees, coursework tags, and professional credentials.</p>
+            </div>
+            <button class="btn btn-primary" onclick="savePortfolioData()">
+              <i class="ri-save-line"></i> Save All
+            </button>
+          </div>
+
+          <!-- Education Section -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-graduation-cap-line"></i> Academic Education</h3>
+              <button class="btn btn-secondary btn-sm" onclick="openAddEducationModal()">
+                <i class="ri-add-line"></i> Add Education Entry
+              </button>
+            </div>
+            <div id="education-admin-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Certifications Section -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-award-line"></i> Professional Certifications</h3>
+              <button class="btn btn-secondary btn-sm" onclick="openAddCertModal()">
+                <i class="ri-add-line"></i> Add Certification
+              </button>
+            </div>
+            <div id="certifications-admin-list" class="form-grid-2">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: CAPSTONE & FUTURE POSTS -->
+        <div class="tab-pane" id="tab-capstone">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Capstone & Future Posts</h2>
+              <p class="section-subtitle">Manage your senior engineering capstone project details and upcoming technical publications.</p>
+            </div>
+            <button class="btn btn-primary" onclick="savePortfolioData()">
+              <i class="ri-save-line"></i> Save All
+            </button>
+          </div>
+
+          <!-- Capstone Section -->
+          <div class="panel-card" style="margin-bottom: 2rem;">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-rocket-2-line"></i> Senior Year Capstone Project</h3>
+              <button class="btn btn-primary btn-sm" onclick="saveCapstoneFields()">
+                <i class="ri-check-line"></i> Update Capstone
+              </button>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-title">Project Title</label>
+                <input type="text" id="capstone-form-title" class="form-input no-icon" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-institution">Institution & Department</label>
+                <input type="text" id="capstone-form-institution" class="form-input no-icon" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-timeline">Timeline / Academic Year</label>
+                <input type="text" id="capstone-form-timeline" class="form-input no-icon" placeholder="2025 — 2026 Academic Year">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-status">Development Status</label>
+                <input type="text" id="capstone-form-status" class="form-input no-icon" placeholder="In Active Development & Prototyping">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="capstone-form-abstract">Abstract & Problem Statement</label>
+              <textarea id="capstone-form-abstract" class="form-input no-icon" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="capstone-form-tech">Technologies & Frameworks (comma separated)</label>
+              <input type="text" id="capstone-form-tech" class="form-input no-icon" placeholder="TypeScript, Node.js, Python, Docker, Vector DB">
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-repo">GitHub Repository URL</label>
+                <input type="url" id="capstone-form-repo" class="form-input no-icon" placeholder="https://github.com/...">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="capstone-form-live">Research / Live Demo URL</label>
+                <input type="url" id="capstone-form-live" class="form-input no-icon" placeholder="https://...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Future Posts Section -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="ri-article-line"></i> Upcoming Technical Publications Roadmap</h3>
+              <button class="btn btn-secondary btn-sm" onclick="openAddPostModal()">
+                <i class="ri-add-line"></i> Add Future Post
+              </button>
+            </div>
+            <div id="posts-admin-list" class="form-grid-2">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: INBOUND MESSAGES -->
+        <div class="tab-pane" id="tab-messages">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Inbound Contact Inquiries</h2>
+              <p class="section-subtitle">Messages submitted by recruiters, clients, and visitors via your portfolio.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="loadMessages()">
+              <i class="ri-refresh-line"></i> Refresh Inbox
+            </button>
+          </div>
+
+          <div class="messages-list" id="messages-container">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- TAB: SECURITY & BACKUP -->
+        <div class="tab-pane" id="tab-settings">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Security & System Settings</h2>
+              <p class="section-subtitle">Update admin login password and export/import portfolio backups.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <!-- Password Management -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title"><i class="ri-lock-password-line"></i> Change Admin Password</h3>
+              </div>
+              <form id="change-password-form">
+                <div class="form-group">
+                  <label class="form-label" for="current-password">Current Password</label>
+                  <input type="password" id="current-password" class="form-input no-icon" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-password">New Password (min. 6 characters)</label>
+                  <input type="password" id="new-password" class="form-input no-icon" required minlength="6">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="confirm-password">Confirm New Password</label>
+                  <input type="password" id="confirm-password" class="form-input no-icon" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">
+                  <i class="ri-shield-check-line"></i> Update Password
+                </button>
+              </form>
+            </div>
+
+              <!-- Backup & Restore -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title"><i class="ri-database-2-line"></i> Cloud Database & Backups</h3>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1.25rem;">
+                Your portfolio content and visitor messages are continuously backed up to Firebase Firestore. You can also trigger an immediate cloud push or download an offline snapshot.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button class="btn btn-primary" onclick="forceCloudSync()">
+                  <i class="ri-refresh-line"></i> Sync All to Firebase Firestore
+                </button>
+                <button class="btn btn-secondary" onclick="exportPortfolioBackup()">
+                  <i class="ri-download-2-line"></i> Download JSON Backup
+                </button>
+                <label class="btn btn-secondary" style="cursor: pointer;">
+                  <i class="ri-upload-2-line"></i> Restore from JSON File
+                  <input type="file" id="import-json-file" accept=".json" style="display: none;" onchange="importPortfolioBackup(event)">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+  
+  <!-- Project Modal -->
+  <div class="modal-overlay" id="project-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="panel-title" id="project-modal-title"><i class="ri-folders-line"></i> Add Project</h3>
+        <button class="modal-close" onclick="closeModal('project-modal')">&times;</button>
+      </div>
+      <form id="project-form" onsubmit="handleProjectSubmit(event)">
+        <input type="hidden" id="project-form-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="proj-title">Project Title</label>
+            <input type="text" id="proj-title" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="proj-category">Category</label>
+            <input type="text" id="proj-category" class="form-input no-icon" placeholder="Full-Stack Web, AI & Autonomous Systems, etc." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="proj-desc">Description</label>
+            <textarea id="proj-desc" class="form-input no-icon" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="proj-img">Image Path or URL</label>
+            <input type="text" id="proj-img" class="form-input no-icon" placeholder="assets/img/project-1.png" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="proj-live">Live Demo URL</label>
+              <input type="url" id="proj-live" class="form-input no-icon" placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="proj-github">GitHub Repo URL</label>
+              <input type="url" id="proj-github" class="form-input no-icon" placeholder="https://github.com/...">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('project-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Experience Modal -->
+  <div class="modal-overlay" id="exp-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="panel-title" id="exp-modal-title"><i class="ri-briefcase-line"></i> Add Experience</h3>
+        <button class="modal-close" onclick="closeModal('exp-modal')">&times;</button>
+      </div>
+      <form id="exp-form" onsubmit="handleExpSubmit(event)">
+        <input type="hidden" id="exp-form-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="exp-role">Role Title</label>
+            <input type="text" id="exp-role" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-company">Company / Organization</label>
+            <input type="text" id="exp-company" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-period">Time Period</label>
+            <input type="text" id="exp-period" class="form-input no-icon" placeholder="2024 — Present" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-desc">Summary Description</label>
+            <textarea id="exp-desc" class="form-input no-icon" rows="2" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-highlights">Key Highlights (one bullet per line)</label>
+            <textarea id="exp-highlights" class="form-input no-icon" rows="3" placeholder="Engineered full-stack features...&#10;Integrated LLM agent pipelines..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-tech">Technologies (comma-separated)</label>
+            <input type="text" id="exp-tech" class="form-input no-icon" placeholder="React.js, Next.js, TypeScript, PostgreSQL">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('exp-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Save Experience</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Education Modal -->
+  <div class="modal-overlay" id="edu-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="panel-title" id="edu-modal-title"><i class="ri-graduation-cap-line"></i> Add Education</h3>
+        <button class="modal-close" onclick="closeModal('edu-modal')">&times;</button>
+      </div>
+      <form id="edu-form" onsubmit="handleEduSubmit(event)">
+        <input type="hidden" id="edu-form-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="edu-degree">Degree / Certificate Name</label>
+            <input type="text" id="edu-degree" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edu-inst">Institution</label>
+            <input type="text" id="edu-inst" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edu-period">Years</label>
+            <input type="text" id="edu-period" class="form-input no-icon" placeholder="2022 — 2026" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edu-desc">Description</label>
+            <textarea id="edu-desc" class="form-input no-icon" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edu-courses">Coursework / Disciplines (comma-separated)</label>
+            <input type="text" id="edu-courses" class="form-input no-icon" placeholder="Data Structures, Algorithms, Software Architecture">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('edu-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Save Education</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Certification Modal -->
+  <div class="modal-overlay" id="cert-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="panel-title" id="cert-modal-title"><i class="ri-award-line"></i> Add Certification</h3>
+        <button class="modal-close" onclick="closeModal('cert-modal')">&times;</button>
+      </div>
+      <form id="cert-form" onsubmit="handleCertSubmit(event)">
+        <input type="hidden" id="cert-form-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="cert-name">Certification Title</label>
+            <input type="text" id="cert-name" class="form-input no-icon" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cert-issuer">Issuer / Organization</label>
+            <input type="text" id="cert-issuer" class="form-input no-icon" placeholder="Meta / Coursera, Google, etc." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cert-status">Status Badge</label>
+            <input type="text" id="cert-status" class="form-input no-icon" value="Verified Credential" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cert-desc">Description</label>
+            <textarea id="cert-desc" class="form-input no-icon" rows="2" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cert-skills">Skills (comma-separated)</label>
+            <input type="text" id="cert-skills" class="form-input no-icon" placeholder="React.js, TypeScript, Autonomous Agents">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('cert-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Save Certification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Future Post Modal -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="panel-title" id="post-modal-title"><i class="ri-article-line"></i> Add Future Post</h3>
+        <button class="modal-close" onclick="closeModal('post-modal')">&times;</button>
+      </div>
+      <form id="post-form" onsubmit="handlePostSubmit(event)">
+        <input type="hidden" id="post-form-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="post-form-title-input">Article Title</label>
+            <input type="text" id="post-form-title-input" class="form-input no-icon" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="post-form-category">Category</label>
+              <select id="post-form-category" class="form-input no-icon" required>
+                <option value="AI Systems & Agents">AI Systems & Agents</option>
+                <option value="Backend Engineering">Backend Engineering</option>
+                <option value="Frontend & UI Architecture">Frontend & UI Architecture</option>
+                <option value="Cloud & Security">Cloud & Security</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="post-form-status-select">Status</label>
+              <select id="post-form-status-select" class="form-input no-icon" required>
+                <option value="Drafting & Research">Drafting & Research</option>
+                <option value="Outline Approved">Outline Approved</option>
+                <option value="In Review">In Review</option>
+                <option value="Planned">Planned</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="post-form-date">Target Release</label>
+              <input type="text" id="post-form-date" class="form-input no-icon" placeholder="Q3 2026" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="post-form-readtime">Estimated Read Time</label>
+              <input type="text" id="post-form-readtime" class="form-input no-icon" placeholder="8 min read" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="post-form-summary">Executive Summary</label>
+            <textarea id="post-form-summary" class="form-input no-icon" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="post-form-tags">Topic Tags (comma separated)</label>
+            <input type="text" id="post-form-tags" class="form-input no-icon" placeholder="AgenticAI, TypeScript, SystemDesign">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('post-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Save Publication</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN JAVASCRIPT ==================== -->
+  <script>
+    // State
+    let authToken = localStorage.getItem('fn_admin_token') || null;
+    let portfolioData = null;
+    let contactMessages = [];
+
+    // Toast Notification helper
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icon = type === 'success' ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill';
+      toast.innerHTML = `<i class="${icon}"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Toggle Password Visibility on Login
+    const toggleBtn = document.getElementById('toggle-password-btn');
+    const pwdInput = document.getElementById('login-password');
+    const pwdIcon = document.getElementById('toggle-password-icon');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+          pwdIcon.className = 'ri-eye-off-line';
+        } else {
+          pwdInput.type = 'password';
+          pwdIcon.className = 'ri-eye-line';
+        }
+      });
+    }
+
+    // Mobile nav toggle
+    const mobileToggle = document.getElementById('mobile-nav-toggle');
+    const sidebar = document.getElementById('admin-sidebar');
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('mobile-open');
+      });
+    }
+
+    // Tab Navigation
+    const tabButtons = document.querySelectorAll('.nav-tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const currentTabTitle = document.getElementById('current-tab-title');
+
+    const tabTitles = {
+      'dashboard': 'Dashboard Overview',
+      'profile': 'Personal Profile & Bio',
+      'projects': 'Projects Portfolio',
+      'skills': 'Technical Skills & Stack',
+      'experience': 'Work & Practical Experience',
+      'education': 'Education & Certifications',
+      'capstone': 'Capstone & Future Posts',
+      'messages': 'Inbound Contact Inquiries',
+      'settings': 'Security & System Settings'
+    };
+
+    function switchTab(tabId) {
+      tabButtons.forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      tabPanes.forEach(pane => {
+        if (pane.id === `tab-${tabId}`) {
+          pane.classList.add('active');
+        } else {
+          pane.classList.remove('active');
+        }
+      });
+
+      if (tabTitles[tabId]) {
+        currentTabTitle.textContent = tabTitles[tabId];
+      }
+
+      if (sidebar.classList.contains('mobile-open')) {
+        sidebar.classList.remove('mobile-open');
+      }
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Authentication
+    async function checkAuth() {
+      if (!authToken) {
+        showLoginScreen();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/verify', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) {
+          showAdminPanel();
+          loadPortfolioData();
+          loadMessages();
+        } else {
+          localStorage.removeItem('fn_admin_token');
+          authToken = null;
+          showLoginScreen();
+        }
+      } catch (err) {
+        console.error(err);
+        showLoginScreen();
+      }
+    }
+
+    function showLoginScreen() {
+      document.getElementById('auth-gate').style.display = 'flex';
+      document.getElementById('admin-layout').style.display = 'none';
+    }
+
+    function showAdminPanel() {
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('admin-layout').style.display = 'flex';
+    }
+
+    // Login Form Submit
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+      errorEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.token) {
+          authToken = data.token;
+          localStorage.setItem('fn_admin_token', authToken);
+          showToast('Welcome back, Furqan! Admin access granted.');
+          showAdminPanel();
+          loadPortfolioData();
+          loadMessages();
+        } else {
+          errorEl.textContent = data.error || 'Authentication failed. Invalid username or password.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Server connection error. Please try again.';
+        errorEl.style.display = 'block';
+      }
+    });
+
+    // Logout
+    async function logoutAdmin() {
+      try {
+        await fetch('/api/admin/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+      } catch (e) {}
+
+      localStorage.removeItem('fn_admin_token');
+      authToken = null;
+      showToast('Logged out successfully.');
+      showLoginScreen();
+    }
+
+    // Load Portfolio Data
+    async function loadPortfolioData() {
+      try {
+        const res = await fetch('/api/portfolio');
+        if (res.ok) {
+          portfolioData = await res.json();
+          renderAll();
+        }
+      } catch (err) {
+        showToast('Failed to load portfolio data', 'error');
+      }
+    }
+
+    // Load Inbound Messages
+    async function loadMessages() {
+      try {
+        const res = await fetch('/api/admin/messages', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) {
+          contactMessages = await res.json();
+          renderMessages();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Render All Views
+    function renderAll() {
+      if (!portfolioData) return;
+      renderStats();
+      renderProfile();
+      renderProjects();
+      renderSkills();
+      renderExperience();
+      renderEducation();
+      renderCertifications();
+      renderCapstone();
+      renderFuturePosts();
+    }
+
+    // Render Dashboard Stats
+    function renderStats() {
+      const projectsCount = (portfolioData.projects || []).length;
+      let skillsCount = 0;
+      (portfolioData.skills || []).forEach(s => skillsCount += (s.tags || []).length);
+      const experienceCount = (portfolioData.experience || []).length;
+      const unreadMsgs = contactMessages.filter(m => !m.read).length;
+
+      document.getElementById('stat-projects-count').textContent = projectsCount;
+      document.getElementById('stat-skills-count').textContent = skillsCount;
+      document.getElementById('stat-experience-count').textContent = experienceCount;
+      document.getElementById('stat-messages-count').textContent = contactMessages.length;
+
+      const badge = document.getElementById('unread-messages-count');
+      if (unreadMsgs > 0) {
+        badge.textContent = unreadMsgs;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // Render Profile Tab
+    function renderProfile() {
+      const p = portfolioData.profile || {};
+      document.getElementById('profile-name').value = p.name || '';
+      document.getElementById('profile-role').value = p.role || '';
+      document.getElementById('profile-subtitle').value = p.subtitle || '';
+      document.getElementById('profile-about').value = p.aboutDescription || '';
+      document.getElementById('profile-exp-years').value = p.experienceYears || '2+';
+      document.getElementById('profile-proj-completed').value = p.projectsCompleted || '15+';
+      document.getElementById('profile-credentials').value = p.verifiedCredentials || '4+';
+      document.getElementById('profile-email').value = p.email || '';
+      document.getElementById('profile-phone').value = p.phone || '';
+      document.getElementById('profile-location').value = p.location || '';
+      document.getElementById('profile-calendly').value = p.calendlyUrl || '';
+      document.getElementById('profile-linkedin').value = p.linkedinUrl || '';
+      document.getElementById('profile-github').value = p.githubUrl || '';
+      document.getElementById('profile-project-repo').value = p.projectRepoUrl || '';
+      document.getElementById('profile-cv').value = p.cvUrl || '';
+    }
+
+    // Collect profile form values
+    function updateProfileFromInputs() {
+      if (!portfolioData.profile) portfolioData.profile = {};
+      const p = portfolioData.profile;
+      p.name = document.getElementById('profile-name').value;
+      p.role = document.getElementById('profile-role').value;
+      p.subtitle = document.getElementById('profile-subtitle').value;
+      p.aboutDescription = document.getElementById('profile-about').value;
+      p.experienceYears = document.getElementById('profile-exp-years').value;
+      p.projectsCompleted = document.getElementById('profile-proj-completed').value;
+      p.verifiedCredentials = document.getElementById('profile-credentials').value;
+      p.email = document.getElementById('profile-email').value;
+      p.phone = document.getElementById('profile-phone').value;
+      p.location = document.getElementById('profile-location').value;
+      p.calendlyUrl = document.getElementById('profile-calendly').value;
+      p.linkedinUrl = document.getElementById('profile-linkedin').value;
+      p.githubUrl = document.getElementById('profile-github').value;
+      p.projectRepoUrl = document.getElementById('profile-project-repo').value;
+      p.cvUrl = document.getElementById('profile-cv').value;
+    }
+
+    // Render Projects Tab
+    function renderProjects() {
+      const container = document.getElementById('projects-admin-list');
+      container.innerHTML = '';
+      const projects = portfolioData.projects || [];
+
+      if (projects.length === 0) {
+        container.innerHTML = '<p style="color: var(--admin-text-muted);">No projects added yet.</p>';
+        return;
+      }
+
+      projects.forEach(proj => {
+        const card = document.createElement('article');
+        card.className = 'project-admin-card';
+        card.innerHTML = `
+          <img src="${proj.image}" alt="${proj.title}" class="project-admin-img" onerror="this.src='assets/img/project-1.png'">
+          <div class="project-admin-body">
+            <span class="project-admin-tag">${proj.category}</span>
+            <h3 class="project-admin-title">${proj.title}</h3>
+            <p class="project-admin-desc">${proj.description}</p>
+            <div class="project-admin-actions">
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary btn-sm" onclick="editProject('${proj.id}')">
+                  <i class="ri-edit-line"></i> Edit
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProject('${proj.id}')">
+                  <i class="ri-delete-bin-line"></i> Delete
+                </button>
+              </div>
+              <div style="display: flex; gap: 0.4rem;">
+                ${proj.liveUrl ? `<a href="${proj.liveUrl}" target="_blank" class="btn btn-secondary btn-sm" title="Live Demo"><i class="ri-link"></i></a>` : ''}
+                ${proj.githubUrl ? `<a href="${proj.githubUrl}" target="_blank" class="btn btn-secondary btn-sm" title="GitHub Code"><i class="ri-github-line"></i></a>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Add / Edit Project
+    function openAddProjectModal() {
+      document.getElementById('project-modal-title').innerHTML = '<i class="ri-folders-line"></i> Add New Project';
+      document.getElementById('project-form-id').value = '';
+      document.getElementById('proj-title').value = '';
+      document.getElementById('proj-category').value = '';
+      document.getElementById('proj-desc').value = '';
+      document.getElementById('proj-img').value = 'assets/img/project-1.png';
+      document.getElementById('proj-live').value = '';
+      document.getElementById('proj-github').value = '';
+      openModal('project-modal');
+    }
+
+    function editProject(id) {
+      const proj = (portfolioData.projects || []).find(p => p.id === id);
+      if (!proj) return;
+      document.getElementById('project-modal-title').innerHTML = '<i class="ri-edit-line"></i> Edit Project';
+      document.getElementById('project-form-id').value = proj.id;
+      document.getElementById('proj-title').value = proj.title || '';
+      document.getElementById('proj-category').value = proj.category || '';
+      document.getElementById('proj-desc').value = proj.description || '';
+      document.getElementById('proj-img').value = proj.image || '';
+      document.getElementById('proj-live').value = proj.liveUrl || '';
+      document.getElementById('proj-github').value = proj.githubUrl || '';
+      openModal('project-modal');
+    }
+
+    function handleProjectSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('project-form-id').value;
+      const title = document.getElementById('proj-title').value.trim();
+      const category = document.getElementById('proj-category').value.trim();
+      const description = document.getElementById('proj-desc').value.trim();
+      const image = document.getElementById('proj-img').value.trim();
+      const liveUrl = document.getElementById('proj-live').value.trim();
+      const githubUrl = document.getElementById('proj-github').value.trim();
+
+      if (!portfolioData.projects) portfolioData.projects = [];
+
+      if (id) {
+        // Edit
+        const index = portfolioData.projects.findIndex(p => p.id === id);
+        if (index !== -1) {
+          portfolioData.projects[index] = { id, title, category, description, image, liveUrl, githubUrl };
+        }
+      } else {
+        // Add
+        const newId = `proj-${Date.now()}`;
+        portfolioData.projects.push({ id: newId, title, category, description, image, liveUrl, githubUrl });
+      }
+
+      closeModal('project-modal');
+      renderProjects();
+      renderStats();
+      savePortfolioData();
+    }
+
+    function deleteProject(id) {
+      if (confirm('Are you sure you want to delete this project?')) {
+        portfolioData.projects = portfolioData.projects.filter(p => p.id !== id);
+        renderProjects();
+        renderStats();
+        savePortfolioData();
+      }
+    }
+
+    // Render Skills Tab
+    function renderSkills() {
+      const container = document.getElementById('skills-admin-container');
+      container.innerHTML = '';
+      const skills = portfolioData.skills || [];
+
+      skills.forEach((cat, catIdx) => {
+        const card = document.createElement('div');
+        card.className = 'panel-card';
+        card.innerHTML = `
+          <div class="panel-header">
+            <h3 class="panel-title"><i class="${cat.icon || 'ri-code-box-line'}"></i> ${cat.title}</h3>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category Description</label>
+            <input type="text" class="form-input no-icon" value="${cat.description}" onchange="updateSkillDesc(${catIdx}, this.value)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Active Skill Pills</label>
+            <div class="pills-container" id="pills-container-${catIdx}">
+              ${(cat.tags || []).map((tag, tagIdx) => `
+                <span class="pill-item">
+                  ${tag}
+                  <span class="pill-remove" onclick="removeSkillTag(${catIdx}, ${tagIdx})" title="Remove tag">&times;</span>
+                </span>
+              `).join('')}
+            </div>
+            <div class="pill-add-row">
+              <input type="text" id="add-tag-input-${catIdx}" class="form-input no-icon" placeholder="Add skill tag (e.g. Next.js)..." onkeydown="if(event.key==='Enter'){event.preventDefault();addSkillTag(${catIdx});}">
+              <button class="btn btn-secondary btn-sm" onclick="addSkillTag(${catIdx})"><i class="ri-add-line"></i> Add</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateSkillDesc(catIdx, val) {
+      portfolioData.skills[catIdx].description = val;
+    }
+
+    function addSkillTag(catIdx) {
+      const input = document.getElementById(`add-tag-input-${catIdx}`);
+      const val = input.value.trim();
+      if (!val) return;
+      if (!portfolioData.skills[catIdx].tags) portfolioData.skills[catIdx].tags = [];
+      portfolioData.skills[catIdx].tags.push(val);
+      input.value = '';
+      renderSkills();
+      renderStats();
+    }
+
+    function removeSkillTag(catIdx, tagIdx) {
+      portfolioData.skills[catIdx].tags.splice(tagIdx, 1);
+      renderSkills();
+      renderStats();
+    }
+
+    // Render Experience Tab
+    function renderExperience() {
+      const container = document.getElementById('experience-admin-list');
+      container.innerHTML = '';
+      const expList = portfolioData.experience || [];
+
+      expList.forEach(exp => {
+        const card = document.createElement('div');
+        card.className = 'panel-card';
+        card.innerHTML = `
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">${exp.role}</h3>
+              <span style="color: var(--admin-primary); font-size: 0.85rem; font-weight: 500;">
+                <i class="ri-building-line"></i> ${exp.company} &nbsp;•&nbsp; <i class="ri-calendar-line"></i> ${exp.period}
+              </span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary btn-sm" onclick="editExperience('${exp.id}')"><i class="ri-edit-line"></i> Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteExperience('${exp.id}')"><i class="ri-delete-bin-line"></i> Delete</button>
+            </div>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--admin-text); margin-bottom: 0.75rem;">${exp.description}</p>
+          <ul style="margin-left: 1.25rem; font-size: 0.825rem; color: var(--admin-text-muted); margin-bottom: 1rem;">
+            ${(exp.highlights || []).map(h => `<li style="margin-bottom: 0.25rem;">${h}</li>`).join('')}
+          </ul>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            ${(exp.tech || []).map(t => `<span class="pill-item" style="font-size: 0.75rem;">${t}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openAddExperienceModal() {
+      document.getElementById('exp-modal-title').innerHTML = '<i class="ri-briefcase-line"></i> Add Experience';
+      document.getElementById('exp-form-id').value = '';
+      document.getElementById('exp-role').value = '';
+      document.getElementById('exp-company').value = '';
+      document.getElementById('exp-period').value = '2024 — Present';
+      document.getElementById('exp-desc').value = '';
+      document.getElementById('exp-highlights').value = '';
+      document.getElementById('exp-tech').value = '';
+      openModal('exp-modal');
+    }
+
+    function editExperience(id) {
+      const exp = (portfolioData.experience || []).find(e => e.id === id);
+      if (!exp) return;
+      document.getElementById('exp-modal-title').innerHTML = '<i class="ri-edit-line"></i> Edit Experience';
+      document.getElementById('exp-form-id').value = exp.id;
+      document.getElementById('exp-role').value = exp.role || '';
+      document.getElementById('exp-company').value = exp.company || '';
+      document.getElementById('exp-period').value = exp.period || '';
+      document.getElementById('exp-desc').value = exp.description || '';
+      document.getElementById('exp-highlights').value = (exp.highlights || []).join('\n');
+      document.getElementById('exp-tech').value = (exp.tech || []).join(', ');
+      openModal('exp-modal');
+    }
+
+    function handleExpSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('exp-form-id').value;
+      const role = document.getElementById('exp-role').value.trim();
+      const company = document.getElementById('exp-company').value.trim();
+      const period = document.getElementById('exp-period').value.trim();
+      const description = document.getElementById('exp-desc').value.trim();
+      const highlights = document.getElementById('exp-highlights').value.split('\n').map(h => h.trim()).filter(Boolean);
+      const tech = document.getElementById('exp-tech').value.split(',').map(t => t.trim()).filter(Boolean);
+
+      if (!portfolioData.experience) portfolioData.experience = [];
+
+      if (id) {
+        const idx = portfolioData.experience.findIndex(e => e.id === id);
+        if (idx !== -1) {
+          portfolioData.experience[idx] = { id, role, company, period, description, highlights, tech };
+        }
+      } else {
+        const newId = `exp-${Date.now()}`;
+        portfolioData.experience.push({ id: newId, role, company, period, description, highlights, tech });
+      }
+
+      closeModal('exp-modal');
+      renderExperience();
+      renderStats();
+      savePortfolioData();
+    }
+
+    function deleteExperience(id) {
+      if (confirm('Delete this work experience entry?')) {
+        portfolioData.experience = portfolioData.experience.filter(e => e.id !== id);
+        renderExperience();
+        renderStats();
+        savePortfolioData();
+      }
+    }
+
+    // Render Education
+    function renderEducation() {
+      const container = document.getElementById('education-admin-list');
+      container.innerHTML = '';
+      const eduList = portfolioData.education || [];
+
+      eduList.forEach(edu => {
+        const item = document.createElement('div');
+        item.style.borderBottom = '1px solid var(--admin-border)';
+        item.style.paddingBottom = '1rem';
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <div>
+              <h4 style="font-size: 1rem; color: var(--admin-title);">${edu.degree}</h4>
+              <span style="color: var(--admin-primary); font-size: 0.85rem;"><i class="ri-graduation-cap-line"></i> ${edu.institution} &bull; ${edu.period}</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="btn btn-secondary btn-sm" onclick="editEducation('${edu.id}')"><i class="ri-edit-line"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="deleteEducation('${edu.id}')"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--admin-text); margin-bottom: 0.5rem;">${edu.description}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            ${(edu.courses || []).map(c => `<span class="pill-item" style="font-size: 0.75rem;">${c}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openAddEducationModal() {
+      document.getElementById('edu-modal-title').innerHTML = '<i class="ri-graduation-cap-line"></i> Add Education';
+      document.getElementById('edu-form-id').value = '';
+      document.getElementById('edu-degree').value = '';
+      document.getElementById('edu-inst').value = '';
+      document.getElementById('edu-period').value = '';
+      document.getElementById('edu-desc').value = '';
+      document.getElementById('edu-courses').value = '';
+      openModal('edu-modal');
+    }
+
+    function editEducation(id) {
+      const edu = (portfolioData.education || []).find(e => e.id === id);
+      if (!edu) return;
+      document.getElementById('edu-modal-title').innerHTML = '<i class="ri-edit-line"></i> Edit Education';
+      document.getElementById('edu-form-id').value = edu.id;
+      document.getElementById('edu-degree').value = edu.degree || '';
+      document.getElementById('edu-inst').value = edu.institution || '';
+      document.getElementById('edu-period').value = edu.period || '';
+      document.getElementById('edu-desc').value = edu.description || '';
+      document.getElementById('edu-courses').value = (edu.courses || []).join(', ');
+      openModal('edu-modal');
+    }
+
+    function handleEduSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('edu-form-id').value;
+      const degree = document.getElementById('edu-degree').value.trim();
+      const institution = document.getElementById('edu-inst').value.trim();
+      const period = document.getElementById('edu-period').value.trim();
+      const description = document.getElementById('edu-desc').value.trim();
+      const courses = document.getElementById('edu-courses').value.split(',').map(c => c.trim()).filter(Boolean);
+
+      if (!portfolioData.education) portfolioData.education = [];
+
+      if (id) {
+        const idx = portfolioData.education.findIndex(e => e.id === id);
+        if (idx !== -1) portfolioData.education[idx] = { id, degree, institution, period, description, courses };
+      } else {
+        const newId = `edu-${Date.now()}`;
+        portfolioData.education.push({ id: newId, degree, institution, period, description, courses });
+      }
+
+      closeModal('edu-modal');
+      renderEducation();
+      savePortfolioData();
+    }
+
+    function deleteEducation(id) {
+      if (confirm('Delete this education entry?')) {
+        portfolioData.education = portfolioData.education.filter(e => e.id !== id);
+        renderEducation();
+        savePortfolioData();
+      }
+    }
+
+    // Render Certifications
+    function renderCertifications() {
+      const container = document.getElementById('certifications-admin-list');
+      container.innerHTML = '';
+      const certList = portfolioData.certifications || [];
+
+      certList.forEach(cert => {
+        const card = document.createElement('div');
+        card.style.background = 'var(--admin-surface-card)';
+        card.style.border = '1px solid var(--admin-border)';
+        card.style.borderRadius = '0.75rem';
+        card.style.padding = '1.25rem';
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <div>
+              <span class="auth-badge" style="margin-bottom: 0.4rem; padding: 0.15rem 0.5rem; font-size: 0.7rem;"><i class="ri-verified-badge-line"></i> ${cert.status}</span>
+              <h4 style="font-size: 0.95rem; color: var(--admin-title);">${cert.title}</h4>
+              <span style="color: var(--admin-primary); font-size: 0.8rem; font-weight: 500;">${cert.issuer}</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="btn btn-secondary btn-sm" onclick="editCertification('${cert.id}')"><i class="ri-edit-line"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCertification('${cert.id}')"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </div>
+          <p style="font-size: 0.825rem; color: var(--admin-text); margin-bottom: 0.75rem;">${cert.description}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+            ${(cert.skills || []).map(s => `<span class="pill-item" style="font-size: 0.7rem;">${s}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openAddCertModal() {
+      document.getElementById('cert-modal-title').innerHTML = '<i class="ri-award-line"></i> Add Certification';
+      document.getElementById('cert-form-id').value = '';
+      document.getElementById('cert-name').value = '';
+      document.getElementById('cert-issuer').value = '';
+      document.getElementById('cert-status').value = 'Verified Credential';
+      document.getElementById('cert-desc').value = '';
+      document.getElementById('cert-skills').value = '';
+      openModal('cert-modal');
+    }
+
+    function editCertification(id) {
+      const cert = (portfolioData.certifications || []).find(c => c.id === id);
+      if (!cert) return;
+      document.getElementById('cert-modal-title').innerHTML = '<i class="ri-edit-line"></i> Edit Certification';
+      document.getElementById('cert-form-id').value = cert.id;
+      document.getElementById('cert-name').value = cert.title || '';
+      document.getElementById('cert-issuer').value = cert.issuer || '';
+      document.getElementById('cert-status').value = cert.status || 'Verified Credential';
+      document.getElementById('cert-desc').value = cert.description || '';
+      document.getElementById('cert-skills').value = (cert.skills || []).join(', ');
+      openModal('cert-modal');
+    }
+
+    function handleCertSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('cert-form-id').value;
+      const title = document.getElementById('cert-name').value.trim();
+      const issuer = document.getElementById('cert-issuer').value.trim();
+      const status = document.getElementById('cert-status').value.trim();
+      const description = document.getElementById('cert-desc').value.trim();
+      const skills = document.getElementById('cert-skills').value.split(',').map(s => s.trim()).filter(Boolean);
+
+      if (!portfolioData.certifications) portfolioData.certifications = [];
+
+      if (id) {
+        const idx = portfolioData.certifications.findIndex(c => c.id === id);
+        if (idx !== -1) portfolioData.certifications[idx] = { id, title, issuer, status, description, skills };
+      } else {
+        const newId = `cert-${Date.now()}`;
+        portfolioData.certifications.push({ id: newId, title, issuer, status, description, skills });
+      }
+
+      closeModal('cert-modal');
+      renderCertifications();
+      savePortfolioData();
+    }
+
+    function deleteCertification(id) {
+      if (confirm('Delete this certification?')) {
+        portfolioData.certifications = portfolioData.certifications.filter(c => c.id !== id);
+        renderCertifications();
+        savePortfolioData();
+      }
+    }
+
+    // ==================== CAPSTONE & FUTURE POSTS ====================
+    function renderCapstone() {
+      const c = portfolioData.capstone || {};
+      const titleInput = document.getElementById('capstone-form-title');
+      if (titleInput) titleInput.value = c.title || '';
+      const instInput = document.getElementById('capstone-form-institution');
+      if (instInput) instInput.value = c.institution || '';
+      const timeInput = document.getElementById('capstone-form-timeline');
+      if (timeInput) timeInput.value = c.timeline || '';
+      const statusInput = document.getElementById('capstone-form-status');
+      if (statusInput) statusInput.value = c.status || '';
+      const absInput = document.getElementById('capstone-form-abstract');
+      if (absInput) absInput.value = c.abstract || c.description || '';
+      const techInput = document.getElementById('capstone-form-tech');
+      if (techInput) techInput.value = (c.technologies || []).join(', ');
+      const repoInput = document.getElementById('capstone-form-repo');
+      if (repoInput) repoInput.value = c.repoUrl || '';
+      const liveInput = document.getElementById('capstone-form-live');
+      if (liveInput) liveInput.value = c.liveDemoUrl || '';
+    }
+
+    function saveCapstoneFields() {
+      if (!portfolioData.capstone) portfolioData.capstone = {};
+      const c = portfolioData.capstone;
+      c.title = document.getElementById('capstone-form-title').value.trim();
+      c.institution = document.getElementById('capstone-form-institution').value.trim();
+      c.timeline = document.getElementById('capstone-form-timeline').value.trim();
+      c.status = document.getElementById('capstone-form-status').value.trim();
+      c.abstract = document.getElementById('capstone-form-abstract').value.trim();
+      c.description = c.abstract;
+      c.technologies = document.getElementById('capstone-form-tech').value.split(',').map(t => t.trim()).filter(Boolean);
+      c.repoUrl = document.getElementById('capstone-form-repo').value.trim();
+      c.liveDemoUrl = document.getElementById('capstone-form-live').value.trim();
+
+      savePortfolioData();
+      showToast('Capstone project specifications updated!');
+    }
+
+    function renderFuturePosts() {
+      const container = document.getElementById('posts-admin-list');
+      if (!container) return;
+      container.innerHTML = '';
+      const posts = portfolioData.futurePosts || [];
+
+      if (posts.length === 0) {
+        container.innerHTML = '<p style="color: var(--admin-text-muted);">No upcoming technical publications added yet.</p>';
+        return;
+      }
+
+      posts.forEach(post => {
+        const card = document.createElement('div');
+        card.style.background = 'var(--admin-surface-card)';
+        card.style.border = '1px solid var(--admin-border)';
+        card.style.borderRadius = '0.75rem';
+        card.style.padding = '1.25rem';
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <div>
+              <span class="auth-badge" style="margin-bottom: 0.35rem; padding: 0.15rem 0.5rem; font-size: 0.7rem;"><i class="ri-time-line"></i> ${post.targetDate} &bull; ${post.readTime}</span>
+              <h4 style="font-size: 0.95rem; color: var(--admin-title); margin-top: 0.25rem;">${post.title}</h4>
+              <span style="color: var(--admin-primary); font-size: 0.8rem; font-weight: 500;">${post.category}</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button class="btn btn-secondary btn-sm" onclick="editPost('${post.id}')"><i class="ri-edit-line"></i></button>
+              <button class="btn btn-danger btn-sm" onclick="deletePost('${post.id}')"><i class="ri-delete-bin-line"></i></button>
+            </div>
+          </div>
+          <p style="font-size: 0.825rem; color: var(--admin-text); margin-bottom: 0.75rem; line-height: 1.5;">${post.summary}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+              ${(post.tags || []).map(t => `<span class="pill-item" style="font-size: 0.7rem;">#${t.replace(/^#/, '')}</span>`).join('')}
+            </div>
+            <span style="font-size: 0.75rem; color: hsl(45, 90%, 65%); background: hsla(45, 90%, 50%, 0.12); padding: 0.15rem 0.5rem; border-radius: 1rem;">${post.status}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openAddPostModal() {
+      document.getElementById('post-modal-title').innerHTML = '<i class="ri-article-line"></i> Add Future Post';
+      document.getElementById('post-form-id').value = '';
+      document.getElementById('post-form-title-input').value = '';
+      document.getElementById('post-form-category').value = 'AI Systems & Agents';
+      document.getElementById('post-form-status-select').value = 'Drafting & Research';
+      document.getElementById('post-form-date').value = 'Q3 2026';
+      document.getElementById('post-form-readtime').value = '8 min read';
+      document.getElementById('post-form-summary').value = '';
+      document.getElementById('post-form-tags').value = '';
+      openModal('post-modal');
+    }
+
+    function editPost(id) {
+      const post = (portfolioData.futurePosts || []).find(p => p.id === id);
+      if (!post) return;
+      document.getElementById('post-modal-title').innerHTML = '<i class="ri-edit-line"></i> Edit Future Post';
+      document.getElementById('post-form-id').value = post.id;
+      document.getElementById('post-form-title-input').value = post.title;
+      document.getElementById('post-form-category').value = post.category || 'AI Systems & Agents';
+      document.getElementById('post-form-status-select').value = post.status || 'Drafting & Research';
+      document.getElementById('post-form-date').value = post.targetDate || 'Q3 2026';
+      document.getElementById('post-form-readtime').value = post.readTime || '8 min read';
+      document.getElementById('post-form-summary').value = post.summary || '';
+      document.getElementById('post-form-tags').value = (post.tags || []).join(', ');
+      openModal('post-modal');
+    }
+
+    function handlePostSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('post-form-id').value;
+      const title = document.getElementById('post-form-title-input').value.trim();
+      const category = document.getElementById('post-form-category').value;
+      const status = document.getElementById('post-form-status-select').value;
+      const targetDate = document.getElementById('post-form-date').value.trim();
+      const readTime = document.getElementById('post-form-readtime').value.trim();
+      const summary = document.getElementById('post-form-summary').value.trim();
+      const tags = document.getElementById('post-form-tags').value.split(',').map(t => t.trim().replace(/^#/, '')).filter(Boolean);
+
+      if (!portfolioData.futurePosts) portfolioData.futurePosts = [];
+
+      if (id) {
+        const idx = portfolioData.futurePosts.findIndex(p => p.id === id);
+        if (idx !== -1) {
+          portfolioData.futurePosts[idx] = { id, title, category, status, targetDate, readTime, summary, tags };
+        }
+      } else {
+        const newId = `post-${Date.now()}`;
+        portfolioData.futurePosts.push({ id: newId, title, category, status, targetDate, readTime, summary, tags });
+      }
+
+      closeModal('post-modal');
+      renderFuturePosts();
+      savePortfolioData();
+    }
+
+    function deletePost(id) {
+      if (confirm('Delete this publication entry?')) {
+        portfolioData.futurePosts = (portfolioData.futurePosts || []).filter(p => p.id !== id);
+        renderFuturePosts();
+        savePortfolioData();
+      }
+    }
+
+    // Render Messages Tab
+    function renderMessages() {
+      const container = document.getElementById('messages-container');
+      container.innerHTML = '';
+
+      if (contactMessages.length === 0) {
+        container.innerHTML = '<div class="panel-card" style="text-align: center; color: var(--admin-text-muted);"><i class="ri-mail-open-line" style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;"></i>No inbound inquiries yet. Messages submitted through the contact form will appear here.</div>';
+        renderStats();
+        return;
+      }
+
+      contactMessages.forEach(msg => {
+        const card = document.createElement('article');
+        card.className = `message-card ${msg.read ? '' : 'unread'}`;
+        const dateStr = new Date(msg.timestamp).toLocaleString();
+
+        card.innerHTML = `
+          <div class="message-header">
+            <div class="message-sender">
+              <span class="sender-name">${msg.name}</span>
+              <a href="mailto:${msg.email}" class="sender-email">&lt;${msg.email}&gt;</a>
+            </div>
+            <span class="message-date">${dateStr}</span>
+          </div>
+          <div class="message-subject"><i class="ri-chat-voice-line"></i> ${msg.subject}</div>
+          <p class="message-body">${msg.message}</p>
+          <div class="message-actions">
+            <a href="mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}" class="btn btn-secondary btn-sm">
+              <i class="ri-reply-line"></i> Reply via Email
+            </a>
+            <button class="btn btn-secondary btn-sm" onclick="toggleMessageRead('${msg.id}')">
+              <i class="${msg.read ? 'ri-mail-line' : 'ri-mail-open-line'}"></i> Mark as ${msg.read ? 'Unread' : 'Read'}
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteMessage('${msg.id}')">
+              <i class="ri-delete-bin-line"></i> Delete
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      renderStats();
+    }
+
+    async function toggleMessageRead(id) {
+      try {
+        const res = await fetch(`/api/admin/messages/${id}/read`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) {
+          const msg = contactMessages.find(m => m.id === id);
+          if (msg) msg.read = !msg.read;
+          renderMessages();
+        }
+      } catch (err) {
+        showToast('Failed to update message status', 'error');
+      }
+    }
+
+    async function deleteMessage(id) {
+      if (!confirm('Permanently delete this inquiry?')) return;
+      try {
+        const res = await fetch(`/api/admin/messages/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (res.ok) {
+          contactMessages = contactMessages.filter(m => m.id !== id);
+          renderMessages();
+          showToast('Message deleted');
+        }
+      } catch (err) {
+        showToast('Failed to delete message', 'error');
+      }
+    }
+
+    // Save Portfolio Data
+    async function savePortfolioData() {
+      if (!portfolioData) return;
+      updateProfileFromInputs();
+
+      try {
+        const res = await fetch('/api/admin/portfolio', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify(portfolioData)
+        });
+
+        if (res.ok) {
+          const result = await res.json();
+          if (result.cloudSynced) {
+            showToast('✓ Saved & synced to Firebase Firestore! Live on website.');
+          } else {
+            showToast('✓ Portfolio data saved successfully!');
+          }
+        } else {
+          showToast('Failed to save portfolio data.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while saving.', 'error');
+      }
+    }
+
+    // Change Admin Password Form
+    document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        showToast('New passwords do not match.', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          showToast('✓ Admin password updated successfully!');
+          document.getElementById('change-password-form').reset();
+        } else {
+          showToast(data.error || 'Failed to update password.', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while changing password.', 'error');
+      }
+    });
+
+    // Backup & Restore
+    function exportPortfolioBackup() {
+      if (!portfolioData) return;
+      updateProfileFromInputs();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(portfolioData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `furqan-portfolio-backup-${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('Portfolio backup JSON downloaded.');
+    }
+
+    function importPortfolioBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const imported = JSON.parse(evt.target.result);
+          if (imported && (imported.profile || imported.projects)) {
+            portfolioData = imported;
+            renderAll();
+            savePortfolioData();
+            showToast('✓ Backup restored and applied successfully!');
+          } else {
+            showToast('Invalid portfolio JSON structure.', 'error');
+          }
+        } catch (err) {
+          showToast('Could not parse JSON file.', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Force Cloud Sync Button
+    async function forceCloudSync() {
+      if (!portfolioData) return;
+      showToast('Syncing with Firebase Firestore...', 'success');
+      await savePortfolioData();
+    }
+
+    // Initialize
+    checkAuth();
+  </script>
+</body>
+</html>

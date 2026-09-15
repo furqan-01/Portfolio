@@ -1,0 +1,20 @@
+[
+  {
+    "id": "msg-1",
+    "name": "Sarah Jenkins",
+    "email": "sarah.j@innovatetech.io",
+    "subject": "Full-Stack Web & AI Agent Collaboration",
+    "message": "Hi Furqan, I came across your portfolio and was really impressed by your autonomous AI agent workflows and modern React engineering. We have an upcoming client project requiring tool-calling LLM integrations and would love to discuss a potential partnership or role.",
+    "timestamp": "2026-09-12T18:40:00.000Z",
+    "read": false
+  },
+  {
+    "id": "msg-2",
+    "name": "Alexandre Dupont",
+    "email": "alex.dupont@designcore.fr",
+    "subject": "UI/UX & Frontend Design System Consultation",
+    "message": "Hello Furqan! Loved your work on responsive components and typographic systems. Are you available for a 1:1 consultation call this upcoming week?",
+    "timestamp": "2026-09-11T14:15:00.000Z",
+    "read": true
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "adminUsername": "admin",
+  "adminEmail": "furqannaveed377@gmail.com",
+  "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+  "passwordHint": "admin123",
+  "salt": "fn_portfolio_salt_2026",
+  "activeSessions": [
+    {
+      "token": "06caaeb3d95c504dd5ddc578a9e39e14429d53479bfa0150bfc2250079b269f6",
+      "username": "admin",
+      "createdAt": "2026-09-13T05:36:21.346Z",
+      "expiresAt": "2026-09-20T05:36:21.346Z"
+    }
+  ]
+}
