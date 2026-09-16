@@ -1,22 +1,44 @@
 {
-  "profile": {
-    "name": "Furqan Naveed",
-    "role": "Software Engineer & Full-Stack Developer",
-    "subtitle": "Software Engineering Student @ COMSATS | Autonomous AI Agents",
-    "aboutDescription": "Software Engineering student at COMSATS University Islamabad with a dedicated focus on Full-Stack Web Engineering (React, Next.js, Node.js) and Autonomous AI Agents. Merging rigorous software design principles with a refined eye for typography, UI/UX architecture, and responsive design systems.",
-    "email": "furqannaveed377@gmail.com",
-    "phone": "+923136835377",
-    "whatsappUrl": "https://wa.me/923136835377",
-    "location": "Sahiwal, Pakistan",
-    "calendlyUrl": "https://calendly.com/furqannaveed377/30min",
-    "linkedinUrl": "https://www.linkedin.com/in/furqan-naveed-958bb1347",
-    "githubUrl": "https://github.com/furqan-01/",
-    "projectRepoUrl": "https://github.com/furqan-01/responsive-portfolio-website-Anid-main",
-    "cvUrl": "https://drive.google.com/file/d/1ApiVE73p1BimrA7iZC7cTyLdNst8_G4U/view?usp=drive_link",
-    "experienceYears": "2+",
-    "projectsCompleted": "15+",
-    "verifiedCredentials": "4+"
+  "capstone": {
+    "description": "An autonomous multi-agent orchestrator engineered to coordinate specialized LLM agents through deterministic tool-execution loops, verifiable state graphs, and low-latency context memory caches. Solves cyclic hallucination and ungrounded execution in production AI agents.",
+    "timeline": "2025 — 2026 Academic Year",
+    "subtitle": "Undergraduate Senior Engineering Capstone Project",
+    "technologies": [
+      "TypeScript",
+      "Node.js",
+      "Python",
+      "Docker",
+      "Vector DB / Embeddings",
+      "FastAPI",
+      "WebSockets",
+      "Distributed State"
+    ],
+    "status": "In Active Development & Prototyping",
+    "institution": "COMSATS University Islamabad — Department of Computer Science",
+    "architectureHighlights": [
+      {
+        "title": "Supervisor-Worker Mesh",
+        "description": "Hierarchical task decomposition routing sub-goals to domain-specific agent executors."
+      },
+      {
+        "title": "Deterministic Tool Sandbox",
+        "description": "Isolated containerized tool execution with strict JSON Schema verification."
+      },
+      {
+        "title": "Context Memory & Pruning",
+        "description": "Sliding window token compression combined with semantic vector retrievals."
+      },
+      {
+        "title": "Observability & Telemetry Bus",
+        "description": "Real-time streaming agent state traces, token metrics, and execution graphs."
+      }
+    ],
+    "abstract": "Traditional single-agent LLM systems struggle with complex multi-step reasoning, frequently stalling in recursive execution loops or hallucinating parameters. This capstone project develops an authoritative supervisor-worker agent mesh with deterministic verification gates, human-in-the-loop escalation switches, and structured telemetry.",
+    "repoUrl": "https://github.com/furqan-01/",
+    "title": "Autonomous Multi-Agent Collaborative Reasoning & Execution Architecture",
+    "liveDemoUrl": "https://www.linkedin.com/in/furqan-naveed-958bb1347"
   },
+  "updatedAt": "2026-09-16T11:24:39.379Z",
   "projects": [
     {
       "id": "proj-1",
@@ -62,6 +84,233 @@
       "image": "assets/img/project-1.png",
       "liveUrl": "https://www.linkedin.com/in/furqannaveed",
       "githubUrl": "https://github.com/furqan-01"
+    }
+  ],
+  "profile": {
+    "subtitle": "Software Engineering Student @ COMSATS | Autonomous AI Agents",
+    "experienceYears": "2+",
+    "projectRepoUrl": "https://github.com/furqan-01/responsive-portfolio-website-Anid-main",
+    "projectsCompleted": "15+",
+    "email": "furqannaveed377@gmail.com",
+    "calendlyUrl": "https://calendly.com/furqannaveed377/30min",
+    "linkedinUrl": "https://www.linkedin.com/in/furqan-naveed-958bb1347",
+    "aboutDescription": "Software Engineering student at COMSATS University Islamabad with a dedicated focus on Full-Stack Web Engineering (React, Next.js, Node.js) and Autonomous AI Agents. Merging rigorous software design principles with a refined eye for typography, UI/UX architecture, and responsive design systems.",
+    "name": "Furqan Naveed",
+    "cvUrl": "https://drive.google.com/file/d/1ApiVE73p1BimrA7iZC7cTyLdNst8_G4U/view?usp=drive_link",
+    "githubUrl": "https://github.com/furqan-01/",
+    "role": "Software Engineer & Full-Stack Developer",
+    "verifiedCredentials": "4+",
+    "location": "Sahiwal, Pakistan",
+    "whatsappUrl": "https://wa.me/923136835377",
+    "phone": "+923136835377"
+  },
+  "certifications": [
+    {
+      "id": "cert-1",
+      "title": "Meta Front-End Developer Professional Certificate",
+      "issuer": "Meta / Coursera",
+      "status": "Verified Credential",
+      "description": "Comprehensive professional program covering modern React development, TypeScript, state management, mobile-first responsive design, and version control workflows.",
+      "skills": [
+        "React.js",
+        "TypeScript",
+        "Component Architecture",
+        "UX Principles"
+      ]
+    },
+    {
+      "id": "cert-2",
+      "title": "Generative AI & Agentic Design Patterns",
+      "issuer": "DeepLearning.AI",
+      "status": "Verified Credential",
+      "description": "Advanced engineering of autonomous multi-agent systems, deterministic tool execution loops, context reasoning, prompt engineering, and LLM orchestration.",
+      "skills": [
+        "Autonomous Agents",
+        "Tool Calling",
+        "Prompt Optimization",
+        "Vector Embeddings"
+      ]
+    },
+    {
+      "id": "cert-3",
+      "title": "Full-Stack Web Development with Node.js & React",
+      "issuer": "Industry Professional Specialization",
+      "status": "Verified Credential",
+      "description": "End-to-end full stack architecture: Express servers, RESTful microservices, asynchronous execution, database persistence, and cloud containerization.",
+      "skills": [
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "REST APIs"
+      ]
+    },
+    {
+      "id": "cert-4",
+      "title": "Google UX Design Professional Certificate",
+      "issuer": "Google",
+      "status": "Verified Credential",
+      "description": "User-centered research methodologies, wireframing, high-fidelity responsive prototypes in Figma, interaction design, and WCAG accessibility standards.",
+      "skills": [
+        "Figma",
+        "User Research",
+        "Accessibility",
+        "Design Systems"
+      ]
+    }
+  ],
+  "futurePosts": [
+    {
+      "id": "post-1",
+      "title": "Architecting Deterministic Multi-Agent Tool Loops in TypeScript",
+      "category": "AI Systems & Agents",
+      "targetDate": "Q3 2026",
+      "readTime": "8 min read",
+      "summary": "Deep engineering exploration into cycle detection, deterministic schema validation, and fail-safe recovery patterns in modern LLM agent orchestration.",
+      "tags": [
+        "AgenticAI",
+        "TypeScript",
+        "SystemDesign"
+      ],
+      "status": "Drafting & Research"
+    },
+    {
+      "id": "post-2",
+      "title": "Migrating Monolithic Web Apps to Native Node.js HTTP & Serverless",
+      "category": "Backend Engineering",
+      "targetDate": "Q4 2026",
+      "readTime": "6 min read",
+      "summary": "Lessons from shedding bulky framework runtimes in favor of lightweight native Node.js streams and serverless edge functions on Netlify and Cloud Run.",
+      "tags": [
+        "NodeJS",
+        "Serverless",
+        "Netlify",
+        "Performance"
+      ],
+      "status": "Outline Approved"
+    },
+    {
+      "id": "post-3",
+      "title": "Mathematical Typography & Zero-Slop Responsive UI Systems",
+      "category": "Frontend & UI Architecture",
+      "targetDate": "Q4 2026",
+      "readTime": "5 min read",
+      "summary": "Applying modular scale step ratios, nested corner radius formulas, and high-contrast dark palette theory to build clean, durable digital interfaces.",
+      "tags": [
+        "DesignSystems",
+        "CSS",
+        "UIUX",
+        "Typography"
+      ],
+      "status": "In Review"
+    },
+    {
+      "id": "post-4",
+      "title": "Zero-Trust Cloud Persistence: Firestore Rules & Client-Side Verification",
+      "category": "Cloud & Security",
+      "targetDate": "Q1 2027",
+      "readTime": "7 min read",
+      "summary": "Implementing declarative role-based Firestore schemas with strict path authorization, REST fallback sync pipelines, and local caching layers.",
+      "tags": [
+        "Firebase",
+        "Firestore",
+        "Security",
+        "Architecture"
+      ],
+      "status": "Planned"
+    }
+  ],
+  "education": [
+    {
+      "id": "edu-1",
+      "degree": "Bachelor of Science in Software Engineering",
+      "institution": "COMSATS University Islamabad",
+      "period": "2022 — 2026 (In Progress)",
+      "description": "Rigorous 4-year undergraduate engineering curriculum focusing on algorithms, distributed systems architecture, database engineering, software quality assurance, and autonomous intelligent agents.",
+      "courses": [
+        "Data Structures & Algorithms",
+        "Object-Oriented Programming",
+        "Database Systems & SQL",
+        "Software Architecture & Design",
+        "Computer Networks & Protocols",
+        "Operating Systems",
+        "Web Technologies",
+        "Software Quality Assurance"
+      ]
+    },
+    {
+      "id": "edu-2",
+      "degree": "Higher Secondary School Certificate (HSSC)",
+      "institution": "Pre-Engineering & Computer Sciences",
+      "period": "2020 — 2022",
+      "description": "Completed pre-engineering studies with strong distinction, developing foundational analytical capabilities in higher mathematics, computational logic, and physics.",
+      "courses": [
+        "Advanced Mathematics",
+        "Calculus & Analytical Geometry",
+        "Physics",
+        "Computer Science",
+        "Logic & Reasoning"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp-1",
+      "role": "Full-Stack Engineer & AI Systems Lead",
+      "company": "Independent Projects & Client Solutions",
+      "period": "2024 — Present",
+      "description": "Architecting full-stack web applications with React, Next.js, Node.js, and autonomous AI agents. Focused on deterministic tool-calling workflows, responsive UI design systems, and cloud edge persistence.",
+      "highlights": [
+        "Engineered end-to-end full stack web platforms with sub-second page loads and modular component architecture.",
+        "Integrated LLM tool-calling pipelines for structured automated data analysis and contextual retrieval.",
+        "Implemented authentication, role-based authorization, and resilient database schemas using PostgreSQL & Firestore."
+      ],
+      "tech": [
+        "React.js",
+        "Next.js",
+        "Node.js",
+        "TypeScript",
+        "Gemini API",
+        "PostgreSQL",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "id": "exp-2",
+      "role": "Software Engineering Fellow",
+      "company": "Developer Incubator & Tech Fellowships",
+      "period": "2023 — 2024",
+      "description": "Collaborated in agile software delivery cycles to develop production-ready web interfaces, RESTful microservices, and database query optimizations.",
+      "highlights": [
+        "Developed reusable frontend components and state models, improving code maintainability and test coverage.",
+        "Authored REST API endpoints with robust error-handling, payload validation, and comprehensive Postman documentation.",
+        "Conducted code reviews, Git branching strategies, and CI/CD automated pipeline builds."
+      ],
+      "tech": [
+        "JavaScript (ES6+)",
+        "Express.js",
+        "MongoDB",
+        "REST APIs",
+        "Git / GitHub",
+        "Postman"
+      ]
+    },
+    {
+      "id": "exp-3",
+      "role": "Frontend Developer & UI/UX Designer",
+      "company": "Freelance & Community Web Builds",
+      "period": "2022 — 2023",
+      "description": "Delivered modern, high-converting responsive web solutions for client businesses. Combined visual design in Figma with semantic, clean frontend code.",
+      "highlights": [
+        "Designed and developed mobile-first layouts achieving 98+ Google Lighthouse performance scores.",
+        "Translated high-fidelity Figma mockups into interactive web pages with smooth micro-interactions."
+      ],
+      "tech": [
+        "HTML5 / CSS3",
+        "JavaScript",
+        "Figma",
+        "UI/UX Design",
+        "SEO Optimization"
+      ]
     }
   ],
   "skills": [
@@ -160,235 +409,6 @@
         "Distributed Systems",
         "System Design"
       ]
-    }
-  ],
-  "experience": [
-    {
-      "id": "exp-1",
-      "role": "Full-Stack Engineer & AI Systems Lead",
-      "company": "Independent Projects & Client Solutions",
-      "period": "2024 — Present",
-      "description": "Architecting full-stack web applications with React, Next.js, Node.js, and autonomous AI agents. Focused on deterministic tool-calling workflows, responsive UI design systems, and cloud edge persistence.",
-      "highlights": [
-        "Engineered end-to-end full stack web platforms with sub-second page loads and modular component architecture.",
-        "Integrated LLM tool-calling pipelines for structured automated data analysis and contextual retrieval.",
-        "Implemented authentication, role-based authorization, and resilient database schemas using PostgreSQL & Firestore."
-      ],
-      "tech": [
-        "React.js",
-        "Next.js",
-        "Node.js",
-        "TypeScript",
-        "Gemini API",
-        "PostgreSQL",
-        "Tailwind CSS"
-      ]
-    },
-    {
-      "id": "exp-2",
-      "role": "Software Engineering Fellow",
-      "company": "Developer Incubator & Tech Fellowships",
-      "period": "2023 — 2024",
-      "description": "Collaborated in agile software delivery cycles to develop production-ready web interfaces, RESTful microservices, and database query optimizations.",
-      "highlights": [
-        "Developed reusable frontend components and state models, improving code maintainability and test coverage.",
-        "Authored REST API endpoints with robust error-handling, payload validation, and comprehensive Postman documentation.",
-        "Conducted code reviews, Git branching strategies, and CI/CD automated pipeline builds."
-      ],
-      "tech": [
-        "JavaScript (ES6+)",
-        "Express.js",
-        "MongoDB",
-        "REST APIs",
-        "Git / GitHub",
-        "Postman"
-      ]
-    },
-    {
-      "id": "exp-3",
-      "role": "Frontend Developer & UI/UX Designer",
-      "company": "Freelance & Community Web Builds",
-      "period": "2022 — 2023",
-      "description": "Delivered modern, high-converting responsive web solutions for client businesses. Combined visual design in Figma with semantic, clean frontend code.",
-      "highlights": [
-        "Designed and developed mobile-first layouts achieving 98+ Google Lighthouse performance scores.",
-        "Translated high-fidelity Figma mockups into interactive web pages with smooth micro-interactions."
-      ],
-      "tech": [
-        "HTML5 / CSS3",
-        "JavaScript",
-        "Figma",
-        "UI/UX Design",
-        "SEO Optimization"
-      ]
-    }
-  ],
-  "education": [
-    {
-      "id": "edu-1",
-      "degree": "Bachelor of Science in Software Engineering",
-      "institution": "COMSATS University Islamabad",
-      "period": "2022 — 2026 (In Progress)",
-      "description": "Rigorous 4-year undergraduate engineering curriculum focusing on algorithms, distributed systems architecture, database engineering, software quality assurance, and autonomous intelligent agents.",
-      "courses": [
-        "Data Structures & Algorithms",
-        "Object-Oriented Programming",
-        "Database Systems & SQL",
-        "Software Architecture & Design",
-        "Computer Networks & Protocols",
-        "Operating Systems",
-        "Web Technologies",
-        "Software Quality Assurance"
-      ]
-    },
-    {
-      "id": "edu-2",
-      "degree": "Higher Secondary School Certificate (HSSC)",
-      "institution": "Pre-Engineering & Computer Sciences",
-      "period": "2020 — 2022",
-      "description": "Completed pre-engineering studies with strong distinction, developing foundational analytical capabilities in higher mathematics, computational logic, and physics.",
-      "courses": [
-        "Advanced Mathematics",
-        "Calculus & Analytical Geometry",
-        "Physics",
-        "Computer Science",
-        "Logic & Reasoning"
-      ]
-    }
-  ],
-  "certifications": [
-    {
-      "id": "cert-1",
-      "title": "Meta Front-End Developer Professional Certificate",
-      "issuer": "Meta / Coursera",
-      "status": "Verified Credential",
-      "description": "Comprehensive professional program covering modern React development, TypeScript, state management, mobile-first responsive design, and version control workflows.",
-      "skills": [
-        "React.js",
-        "TypeScript",
-        "Component Architecture",
-        "UX Principles"
-      ]
-    },
-    {
-      "id": "cert-2",
-      "title": "Generative AI & Agentic Design Patterns",
-      "issuer": "DeepLearning.AI",
-      "status": "Verified Credential",
-      "description": "Advanced engineering of autonomous multi-agent systems, deterministic tool execution loops, context reasoning, prompt engineering, and LLM orchestration.",
-      "skills": [
-        "Autonomous Agents",
-        "Tool Calling",
-        "Prompt Optimization",
-        "Vector Embeddings"
-      ]
-    },
-    {
-      "id": "cert-3",
-      "title": "Full-Stack Web Development with Node.js & React",
-      "issuer": "Industry Professional Specialization",
-      "status": "Verified Credential",
-      "description": "End-to-end full stack architecture: Express servers, RESTful microservices, asynchronous execution, database persistence, and cloud containerization.",
-      "skills": [
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "REST APIs"
-      ]
-    },
-    {
-      "id": "cert-4",
-      "title": "Google UX Design Professional Certificate",
-      "issuer": "Google",
-      "status": "Verified Credential",
-      "description": "User-centered research methodologies, wireframing, high-fidelity responsive prototypes in Figma, interaction design, and WCAG accessibility standards.",
-      "skills": [
-        "Figma",
-        "User Research",
-        "Accessibility",
-        "Design Systems"
-      ]
-    }
-  ],
-  "capstone": {
-    "title": "Autonomous Multi-Agent Collaborative Reasoning & Execution Architecture",
-    "subtitle": "Undergraduate Senior Engineering Capstone Project",
-    "institution": "COMSATS University Islamabad — Department of Computer Science",
-    "timeline": "2025 — 2026 Academic Year",
-    "status": "In Active Development & Prototyping",
-    "description": "An autonomous multi-agent orchestrator engineered to coordinate specialized LLM agents through deterministic tool-execution loops, verifiable state graphs, and low-latency context memory caches. Solves cyclic hallucination and ungrounded execution in production AI agents.",
-    "abstract": "Traditional single-agent LLM systems struggle with complex multi-step reasoning, frequently stalling in recursive execution loops or hallucinating parameters. This capstone project develops an authoritative supervisor-worker agent mesh with deterministic verification gates, human-in-the-loop escalation switches, and structured telemetry.",
-    "architectureHighlights": [
-      {
-        "title": "Supervisor-Worker Mesh",
-        "description": "Hierarchical task decomposition routing sub-goals to domain-specific agent executors."
-      },
-      {
-        "title": "Deterministic Tool Sandbox",
-        "description": "Isolated containerized tool execution with strict JSON Schema verification."
-      },
-      {
-        "title": "Context Memory & Pruning",
-        "description": "Sliding window token compression combined with semantic vector retrievals."
-      },
-      {
-        "title": "Observability & Telemetry Bus",
-        "description": "Real-time streaming agent state traces, token metrics, and execution graphs."
-      }
-    ],
-    "technologies": [
-      "TypeScript",
-      "Node.js",
-      "Python",
-      "Docker",
-      "Vector DB / Embeddings",
-      "FastAPI",
-      "WebSockets",
-      "Distributed State"
-    ],
-    "repoUrl": "https://github.com/furqan-01/",
-    "liveDemoUrl": "https://www.linkedin.com/in/furqan-naveed-958bb1347"
-  },
-  "futurePosts": [
-    {
-      "id": "post-1",
-      "title": "Architecting Deterministic Multi-Agent Tool Loops in TypeScript",
-      "category": "AI Systems & Agents",
-      "targetDate": "Q3 2026",
-      "readTime": "8 min read",
-      "summary": "Deep engineering exploration into cycle detection, deterministic schema validation, and fail-safe recovery patterns in modern LLM agent orchestration.",
-      "tags": ["AgenticAI", "TypeScript", "SystemDesign"],
-      "status": "Drafting & Research"
-    },
-    {
-      "id": "post-2",
-      "title": "Migrating Monolithic Web Apps to Native Node.js HTTP & Serverless",
-      "category": "Backend Engineering",
-      "targetDate": "Q4 2026",
-      "readTime": "6 min read",
-      "summary": "Lessons from shedding bulky framework runtimes in favor of lightweight native Node.js streams and serverless edge functions on Netlify and Cloud Run.",
-      "tags": ["NodeJS", "Serverless", "Netlify", "Performance"],
-      "status": "Outline Approved"
-    },
-    {
-      "id": "post-3",
-      "title": "Mathematical Typography & Zero-Slop Responsive UI Systems",
-      "category": "Frontend & UI Architecture",
-      "targetDate": "Q4 2026",
-      "readTime": "5 min read",
-      "summary": "Applying modular scale step ratios, nested corner radius formulas, and high-contrast dark palette theory to build clean, durable digital interfaces.",
-      "tags": ["DesignSystems", "CSS", "UIUX", "Typography"],
-      "status": "In Review"
-    },
-    {
-      "id": "post-4",
-      "title": "Zero-Trust Cloud Persistence: Firestore Rules & Client-Side Verification",
-      "category": "Cloud & Security",
-      "targetDate": "Q1 2027",
-      "readTime": "7 min read",
-      "summary": "Implementing declarative role-based Firestore schemas with strict path authorization, REST fallback sync pipelines, and local caching layers.",
-      "tags": ["Firebase", "Firestore", "Security", "Architecture"],
-      "status": "Planned"
     }
   ]
 }

@@ -1,5 +1,31 @@
 [
   {
+    "id": "msg-1789558926396-nze8y",
+    "name": "Ahmad Khan",
+    "email": "ahmad@techlabs.com",
+    "subject": "Urgent Project Inquiry",
+    "message": "Hello Furqan, we would like to hire you for a custom AI agent development project.",
+    "timestamp": "2026-09-16T11:42:06.397Z",
+    "read": false
+  },
+  {
+    "id": "inquiry-1789557900892",
+    "name": "Sarah Connor",
+    "email": "sarah@example.com",
+    "subject": "AI Collaboration",
+    "message": "Excited about your autonomous AI agent projects!",
+    "timestamp": "2026-09-16T11:25:00.892Z",
+    "read": false
+  },
+  {
+    "id": "test-msg-1",
+    "name": "Visitor Test",
+    "email": "visitor@example.com",
+    "subject": "Hello",
+    "message": "Testing Firestore permissions",
+    "timestamp": "2026-09-16T11:24:16.168Z"
+  },
+  {
     "id": "msg-1",
     "name": "Sarah Jenkins",
     "email": "sarah.j@innovatetech.io",

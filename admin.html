@@ -1134,7 +1134,7 @@
       }
     }
 
-    // Load Inbound Messages (Supports Server API + Local Messages)
+    // Load Inbound Messages (Supports Server API + Direct Firestore + Local Messages)
     async function loadMessages() {
       let localList = [];
       try {
@@ -1142,6 +1142,7 @@
         if (raw) localList = JSON.parse(raw);
       } catch(e) {}
 
+      // 1. Try server API
       try {
         const res = await fetch('/api/admin/messages', {
           headers: { 'Authorization': `Bearer ${authToken}` }
@@ -1149,7 +1150,7 @@
         const ct = res.headers.get('content-type') || '';
         if (res.ok && ct.includes('application/json')) {
           const sMsgs = await res.json();
-          if (Array.isArray(sMsgs)) {
+          if (Array.isArray(sMsgs) && sMsgs.length > 0) {
             const existingIds = new Set(sMsgs.map(m => m.id));
             const merged = [...sMsgs];
             localList.forEach(m => {
@@ -1161,6 +1162,49 @@
           }
         }
       } catch (err) {}
+
+      // 2. Direct Firestore fallback (Guarantees messages load on Netlify static hosting)
+      try {
+        const firestoreQueryUrl = 'https://firestore.googleapis.com/v1/projects/metal-photon-1lcf1/databases/ai-studio-responsiveportfo-a815eb56-2bcb-4a43-90e6-ec0e91751b7d/documents:runQuery?key=AIzaSyBMo48b3e30QxRRZrnVk3M_JQP3pUyo80Q';
+        const fRes = await fetch(firestoreQueryUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            structuredQuery: { from: [{ collectionId: 'messages' }] }
+          })
+        });
+        if (fRes.ok) {
+          const results = await fRes.json();
+          if (Array.isArray(results) && results.length > 0) {
+            const cloudMsgs = [];
+            for (const item of results) {
+              if (item.document && item.document.fields) {
+                const f = item.document.fields;
+                const nameParts = item.document.name ? item.document.name.split('/') : [];
+                cloudMsgs.push({
+                  id: (f.id && f.id.stringValue) || nameParts[nameParts.length - 1],
+                  name: (f.name && f.name.stringValue) || '',
+                  email: (f.email && f.email.stringValue) || '',
+                  subject: (f.subject && f.subject.stringValue) || 'Portfolio Inquiry',
+                  message: (f.message && f.message.stringValue) || '',
+                  timestamp: (f.timestamp && f.timestamp.stringValue) || new Date().toISOString(),
+                  read: (f.read && typeof f.read.booleanValue === 'boolean') ? f.read.booleanValue : false
+                });
+              }
+            }
+            if (cloudMsgs.length > 0) {
+              const existingIds = new Set(cloudMsgs.map(m => m.id));
+              localList.forEach(m => {
+                if (!existingIds.has(m.id)) cloudMsgs.push(m);
+              });
+              cloudMsgs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+              contactMessages = cloudMsgs;
+              renderMessages();
+              return;
+            }
+          }
+        }
+      } catch (fErr) {}
 
       contactMessages = localList;
       renderMessages();

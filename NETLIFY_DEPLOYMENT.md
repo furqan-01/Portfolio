@@ -34,7 +34,22 @@ Your portfolio and Admin Panel are engineered with **Universal Dual-Mode Resilie
 ---
 
 ## 🛠️ What Was Fixed for Netlify
+- **Direct Cloud & Serverless Message Storage**: When a visitor submits a contact inquiry, it saves to Firebase Firestore both via the backend serverless API and with direct client-side cloud fallback. Even on Netlify Drop (pure static), messages reach your Firestore cloud inbox!
 - **Dual-Mode Authentication**: If Netlify functions aren't enabled or return static HTML, the admin panel detects this and authenticates client-side seamlessly instead of showing "Server connection error".
 - **Data Fallback Cascade**: Loads portfolio data from `localStorage` -> `/api/portfolio` -> `/data/portfolio-data.json`.
 - **esbuild Bundling**: Configured `netlify.toml` with `included_files = ["data/**", "firebase-applet-config.json"]` and `node_bundler = "esbuild"`.
-- **Contact Inquiries**: If functions are active, saves to server; if static, saves to admin inbox in browser and provides instant email contact.
+
+---
+
+## ⚙️ Do You Need to Add Environment Variables in Netlify?
+**No, you do NOT need to add environment variables in Netlify.** Everything is pre-wired to work out of the box:
+- Firebase Firestore is connected using the built-in configuration (`firebase-applet-config.json`).
+- Default admin credentials are set (`admin` / `admin123`).
+
+### Optional Customization:
+If you *want* to customize your admin credentials or override Firebase settings in Netlify:
+Go to **Site configuration > Environment variables** in Netlify and add:
+- `ADMIN_USERNAME`: Custom admin username (default: `admin`)
+- `ADMIN_PASSWORD`: Custom admin password (default: `admin123`)
+- `FIREBASE_API_KEY`: Custom Firebase API key (optional)
+- `FIREBASE_PROJECT_ID`: Custom Firebase Project ID (optional)

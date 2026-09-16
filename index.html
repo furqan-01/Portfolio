@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
 
       <!--=============== SWIPER CSS ===============-->
-      <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
       <!--=============== CSS ===============-->
       <link rel="stylesheet" href="assets/css/styles.css">
@@ -953,8 +953,8 @@
 
                   <span class="contact__email" id="contact-email">furqannaveed377@gmail.com</span>
 
-                  <!-- Direct Inquiry Form (Connects directly to Admin Panel) -->
-                  <form class="contact__form" id="contact-inquiry-form" style="margin-top: 1.5rem; width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 0.75rem;">
+                  <!-- Direct Inquiry Form (Connects directly to Admin Panel & Firestore) -->
+                  <form class="contact__form" id="contact-inquiry-form" action="javascript:void(0);" method="POST" onsubmit="event.preventDefault(); return (window.handleInquirySubmit ? window.handleInquirySubmit(event) : false);" style="margin-top: 1.5rem; width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 0.75rem;">
                      <div style="width: 100%;">
                         <input type="text" id="inquiry-name" name="name" placeholder="Your Name" required class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
                      </div>
@@ -1053,13 +1053,13 @@
       </footer>
       
       <!--=============== SCROLLREVEAL ===============-->
-      <script src="assets/js/scrollreveal.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
 
       <!--=============== ANIME JS ===============-->
       <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.iife.min.js"></script>
 
       <!--=============== SWIPER JS ===============-->
-      <script src="assets/js/swiper-bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
       <!--=============== MAIN JS ===============-->
       <script src="assets/js/main.js"></script>
