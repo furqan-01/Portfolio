@@ -147,125 +147,16 @@ try {
   }
 } catch (e) {}
 
-window.handleInquirySubmit = async function(e) {
-  if (e && e.preventDefault) e.preventDefault();
-  if (e && e.stopPropagation) e.stopPropagation();
-
-  const nameInput = document.getElementById('inquiry-name');
-  const emailInput = document.getElementById('inquiry-email');
-  const subjectInput = document.getElementById('inquiry-subject');
-  const messageInput = document.getElementById('inquiry-message');
-  const statusEl = document.getElementById('inquiry-status');
-  const submitBtn = document.getElementById('inquiry-submit-btn');
-  const formEl = document.getElementById('contact-inquiry-form');
-
-  const name = nameInput ? nameInput.value.trim() : '';
-  const email = emailInput ? emailInput.value.trim() : '';
-  const subject = subjectInput ? subjectInput.value.trim() : '';
-  const message = messageInput ? messageInput.value.trim() : '';
-
-  if (!statusEl) return false;
-
-  if (!name || !email || !message) {
-    statusEl.style.display = 'block';
-    statusEl.style.color = 'hsl(355, 75%, 60%)';
-    statusEl.textContent = 'Please provide your name, email, and a brief message.';
-    return false;
-  }
-
-  const originalBtnContent = submitBtn ? submitBtn.innerHTML : 'Send Message';
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Sending...';
-  }
-  statusEl.style.display = 'none';
-
-  try {
-    let sent = false;
-
-    // 1. Try server-side API (e.g. Node server or Netlify function)
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message })
-      });
-      const ct = response.headers.get('content-type') || '';
-      if (response.ok && ct.includes('application/json')) {
-        sent = true;
-      }
-    } catch (apiErr) {}
-
-    // 2. Direct Firestore cloud persistence (Guaranteed on Netlify static hosting)
-    if (!sent) {
-      try {
-        const docId = `inquiry-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
-        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/metal-photon-1lcf1/databases/ai-studio-responsiveportfo-a815eb56-2bcb-4a43-90e6-ec0e91751b7d/documents/messages/${docId}?key=AIzaSyBMo48b3e30QxRRZrnVk3M_JQP3pUyo80Q`;
-        const fRes = await fetch(firestoreUrl, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fields: {
-              id: { stringValue: docId },
-              name: { stringValue: name },
-              email: { stringValue: email },
-              subject: { stringValue: subject || 'Portfolio Inquiry' },
-              message: { stringValue: message },
-              timestamp: { stringValue: new Date().toISOString() },
-              read: { booleanValue: false }
-            }
-          })
-        });
-        if (fRes.ok) {
-          sent = true;
-        }
-      } catch (fErr) {
-        console.warn('Direct Firestore submission warning:', fErr);
-      }
-    }
-
-    // 3. Local storage fallback
-    try {
-      const localMsgs = JSON.parse(localStorage.getItem('fn_contact_messages') || '[]');
-      localMsgs.unshift({
-        id: `msg-${Date.now()}`,
-        name,
-        email,
-        subject: subject || 'Portfolio Inquiry',
-        message,
-        timestamp: new Date().toISOString(),
-        read: false
-      });
-      localStorage.setItem('fn_contact_messages', JSON.stringify(localMsgs));
-      sent = true;
-    } catch (e) {}
-
-    if (sent) {
-      statusEl.style.display = 'block';
-      statusEl.style.color = 'hsl(145, 65%, 52%)';
-      statusEl.innerHTML = '<i class="ri-checkbox-circle-line"></i> Message received successfully! Furqan will get back to you soon.';
-      if (formEl) formEl.reset();
-    } else {
-      statusEl.style.display = 'block';
-      statusEl.style.color = 'hsl(355, 75%, 60%)';
-      statusEl.textContent = 'Please email directly at furqannaveed377@gmail.com';
-    }
-  } catch (err) {
-    statusEl.style.display = 'block';
-    statusEl.style.color = 'hsl(355, 75%, 60%)';
-    statusEl.textContent = 'Please email directly at furqannaveed377@gmail.com';
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnContent;
-    }
-  }
-
-  return false;
-};
+if (!window.submitPortfolioInquiry) {
+  window.submitPortfolioInquiry = window.handleInquirySubmit;
+}
 
 if (inquiryForm) {
-  inquiryForm.addEventListener('submit', window.handleInquirySubmit);
+  inquiryForm.addEventListener('submit', function(e) {
+    if (window.submitPortfolioInquiry) {
+      window.submitPortfolioInquiry(e);
+    }
+  });
 }
 
 /*=============== FUTURE POSTS TOPIC FILTERING ===============*/

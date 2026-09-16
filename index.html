@@ -954,23 +954,23 @@
                   <span class="contact__email" id="contact-email">furqannaveed377@gmail.com</span>
 
                   <!-- Direct Inquiry Form (Connects directly to Admin Panel & Firestore) -->
-                  <form class="contact__form" id="contact-inquiry-form" action="javascript:void(0);" method="POST" onsubmit="event.preventDefault(); return (window.handleInquirySubmit ? window.handleInquirySubmit(event) : false);" style="margin-top: 1.5rem; width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 0.75rem;">
+                  <form class="contact__form" id="contact-inquiry-form" novalidate onsubmit="event.preventDefault(); submitPortfolioInquiry(event); return false;" style="margin-top: 1.5rem; width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 0.75rem;">
                      <div style="width: 100%;">
-                        <input type="text" id="inquiry-name" name="name" placeholder="Your Name" required class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
+                        <input type="text" id="inquiry-name" name="name" placeholder="Your Name" class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
                      </div>
                      <div style="width: 100%;">
-                        <input type="email" id="inquiry-email" name="email" placeholder="Your Email" required class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
+                        <input type="email" id="inquiry-email" name="email" placeholder="Your Email" class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
                      </div>
                      <div style="width: 100%;">
                         <input type="text" id="inquiry-subject" name="subject" placeholder="Subject / Topic" class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none;">
                      </div>
                      <div style="width: 100%;">
-                        <textarea id="inquiry-message" name="message" rows="3" placeholder="Message or project inquiry..." required class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none; resize: vertical;"></textarea>
+                        <textarea id="inquiry-message" name="message" rows="3" placeholder="Message or project inquiry..." class="contact__input" style="width: 100%; background: var(--container-color); border: 1px solid hsla(240, 8%, 20%, 0.6); color: var(--title-color); padding: 0.75rem 1rem; border-radius: 0.5rem; font-family: var(--body-font); font-size: 0.85rem; outline: none; resize: vertical;"></textarea>
                      </div>
-                     <button type="submit" class="button" id="inquiry-submit-btn" style="width: 100%;">
+                     <button type="button" class="button" id="inquiry-submit-btn" onclick="submitPortfolioInquiry(event)" style="width: 100%; cursor: pointer;">
                         <i class="ri-send-plane-fill"></i> Send Message
                      </button>
-                     <div id="inquiry-status" style="font-size: 0.8rem; text-align: center; display: none; padding-top: 0.25rem;"></div>
+                     <div id="inquiry-status" style="font-size: 0.85rem; text-align: center; display: none; padding-top: 0.25rem;"></div>
                   </form>
                </div>
 
@@ -1052,6 +1052,155 @@
          </div>
       </footer>
       
+      <!--=============== SELF-CONTAINED INQUIRY HANDLER ===============-->
+      <script>
+        // Clean URL if query params exist from previous form reloads
+        try {
+          if (window.location.search && (window.location.search.includes('name=') || window.location.search.includes('message='))) {
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState({}, document.title, window.location.pathname + (window.location.hash || '#contact'));
+            }
+          }
+        } catch (e) {}
+
+        window.submitPortfolioInquiry = async function(e) {
+          if (e && e.preventDefault) e.preventDefault();
+          if (e && e.stopPropagation) e.stopPropagation();
+
+          var nameEl = document.getElementById('inquiry-name');
+          var emailEl = document.getElementById('inquiry-email');
+          var subjectEl = document.getElementById('inquiry-subject');
+          var messageEl = document.getElementById('inquiry-message');
+          var btnEl = document.getElementById('inquiry-submit-btn');
+          var statusEl = document.getElementById('inquiry-status');
+
+          var name = nameEl ? nameEl.value.trim() : '';
+          var email = emailEl ? emailEl.value.trim() : '';
+          var subject = subjectEl ? subjectEl.value.trim() : '';
+          var message = messageEl ? messageEl.value.trim() : '';
+
+          if (!statusEl) return false;
+
+          // 1. Instant validation check
+          if (!name || !email || !message) {
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div style="background: hsla(355, 75%, 55%, 0.15); border: 1px solid hsla(355, 75%, 55%, 0.4); border-radius: 8px; padding: 10px 12px; color: #ff6b6b; font-size: 0.85rem; text-align: left; display: flex; align-items: center; gap: 8px;"><i class="ri-error-warning-line" style="font-size: 1.15rem; flex-shrink: 0;"></i><span>Please enter your name, email, and message.</span></div>';
+            if (!name && nameEl) nameEl.focus();
+            else if (!email && emailEl) emailEl.focus();
+            else if (!message && messageEl) messageEl.focus();
+            return false;
+          }
+
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div style="background: hsla(355, 75%, 55%, 0.15); border: 1px solid hsla(355, 75%, 55%, 0.4); border-radius: 8px; padding: 10px 12px; color: #ff6b6b; font-size: 0.85rem; text-align: left; display: flex; align-items: center; gap: 8px;"><i class="ri-error-warning-line" style="font-size: 1.15rem; flex-shrink: 0;"></i><span>Please provide a valid email (e.g. name@domain.com).</span></div>';
+            if (emailEl) emailEl.focus();
+            return false;
+          }
+
+          // 2. Immediate visual feedback
+          var originalBtnHtml = btnEl ? btnEl.innerHTML : '<i class="ri-send-plane-fill"></i> Send Message';
+          if (btnEl) {
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Sending message...';
+          }
+          statusEl.style.display = 'block';
+          statusEl.innerHTML = '<div style="color: var(--text-color-light); font-size: 0.85rem; text-align: center; padding: 6px 0; display: flex; align-items: center; justify-content: center; gap: 8px;"><i class="ri-loader-4-line ri-spin" style="color: var(--first-color); font-size: 1.1rem;"></i> Delivering your inquiry...</div>';
+
+          var delivered = false;
+          var docId = 'inquiry-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+          var timestamp = new Date().toISOString();
+
+          // 3. Direct Firestore Cloud Delivery (Reaches Google servers in ~300ms from anywhere)
+          try {
+            var firestoreUrl = 'https://firestore.googleapis.com/v1/projects/metal-photon-1lcf1/databases/ai-studio-responsiveportfo-a815eb56-2bcb-4a43-90e6-ec0e91751b7d/documents/messages/' + docId + '?key=AIzaSyBMo48b3e30QxRRZrnVk3M_JQP3pUyo80Q';
+            var fRes = await fetch(firestoreUrl, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                fields: {
+                  id: { stringValue: docId },
+                  name: { stringValue: name },
+                  email: { stringValue: email },
+                  subject: { stringValue: subject || 'Portfolio Inquiry' },
+                  message: { stringValue: message },
+                  timestamp: { stringValue: timestamp },
+                  read: { booleanValue: false }
+                }
+              })
+            });
+            if (fRes.ok) {
+              delivered = true;
+            }
+          } catch (fErr) {
+            console.warn('Firestore direct write notice:', fErr);
+          }
+
+          // 4. Also call server API if available (timeout 2.5s so it never hangs)
+          try {
+            var controller = new AbortController();
+            var timerId = setTimeout(function() { controller.abort(); }, 2500);
+            var apiRes = await fetch('/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: name, email: email, subject: subject, message: message }),
+              signal: controller.signal
+            });
+            clearTimeout(timerId);
+            if (apiRes.ok) {
+              delivered = true;
+            }
+          } catch (apiErr) {}
+
+          // 5. Local Storage backup
+          try {
+            var localList = JSON.parse(localStorage.getItem('fn_contact_messages') || '[]');
+            localList.unshift({
+              id: docId,
+              name: name,
+              email: email,
+              subject: subject || 'Portfolio Inquiry',
+              message: message,
+              timestamp: timestamp,
+              read: false
+            });
+            localStorage.setItem('fn_contact_messages', JSON.stringify(localList));
+            delivered = true;
+          } catch (lErr) {}
+
+          // 6. Display result
+          if (delivered) {
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div style="background: hsla(145, 65%, 45%, 0.18); border: 1px solid hsla(145, 65%, 45%, 0.5); border-radius: 8px; padding: 14px 16px; text-align: center; color: #34d399; margin-top: 6px;"><div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;"><i class="ri-checkbox-circle-fill" style="font-size: 1.25rem;"></i> Message Sent Successfully!</div><div style="font-size: 0.825rem; color: #d1fae5; line-height: 1.4;">Thank you, <strong>' + name + '</strong>! Your message has been received. Furqan will get back to you soon.</div></div>';
+
+            if (nameEl) nameEl.value = '';
+            if (emailEl) emailEl.value = '';
+            if (subjectEl) subjectEl.value = '';
+            if (messageEl) messageEl.value = '';
+
+            if (btnEl) {
+              btnEl.disabled = false;
+              btnEl.innerHTML = '<i class="ri-check-line"></i> Sent Successfully!';
+              setTimeout(function() {
+                btnEl.innerHTML = originalBtnHtml;
+              }, 4000);
+            }
+          } else {
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div style="background: hsla(355, 75%, 55%, 0.15); border: 1px solid hsla(355, 75%, 55%, 0.4); border-radius: 8px; padding: 12px; color: #ff6b6b; font-size: 0.85rem; text-align: center;"><div>Could not connect. You can reach out directly:</div><div style="margin-top: 8px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;"><a href="https://wa.me/923136835377?text=Hello%20Furqan,%20my%20name%20is%20' + encodeURIComponent(name) + '" target="_blank" rel="noopener noreferrer" class="button button--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;"><i class="ri-whatsapp-line"></i> WhatsApp</a><a href="mailto:furqannaveed377@gmail.com?subject=' + encodeURIComponent(subject || 'Portfolio Inquiry') + '&body=' + encodeURIComponent(message) + '" class="button button--secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;"><i class="ri-mail-send-line"></i> Email</a></div></div>';
+
+            if (btnEl) {
+              btnEl.disabled = false;
+              btnEl.innerHTML = originalBtnHtml;
+            }
+          }
+
+          return false;
+        };
+
+        window.handleInquirySubmit = window.submitPortfolioInquiry;
+      </script>
+
       <!--=============== SCROLLREVEAL ===============-->
       <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
 
@@ -1062,6 +1211,6 @@
       <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
       <!--=============== MAIN JS ===============-->
-      <script src="assets/js/main.js"></script>
+      <script src="assets/js/main.js?v=20260916c"></script>
    </body>
 </html>

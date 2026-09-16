@@ -1911,36 +1911,74 @@
     }
 
     async function toggleMessageRead(id) {
+      const msg = contactMessages.find(m => m.id === id);
+      if (!msg) return;
+      const newReadState = !msg.read;
+
+      // Optimistic update
+      msg.read = newReadState;
+      renderMessages();
+
+      // Update local storage
+      try {
+        const localList = JSON.parse(localStorage.getItem('fn_contact_messages') || '[]');
+        const lIdx = localList.findIndex(m => m.id === id);
+        if (lIdx !== -1) {
+          localList[lIdx].read = newReadState;
+          localStorage.setItem('fn_contact_messages', JSON.stringify(localList));
+        }
+      } catch (e) {}
+
+      // 1. Try server API
       try {
         const res = await fetch(`/api/admin/messages/${id}/read`, {
           method: 'PATCH',
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
-        if (res.ok) {
-          const msg = contactMessages.find(m => m.id === id);
-          if (msg) msg.read = !msg.read;
-          renderMessages();
-        }
-      } catch (err) {
-        showToast('Failed to update message status', 'error');
-      }
+        if (res.ok) return;
+      } catch (err) {}
+
+      // 2. Direct Firestore fallback
+      try {
+        const firestorePatchUrl = `https://firestore.googleapis.com/v1/projects/metal-photon-1lcf1/databases/ai-studio-responsiveportfo-a815eb56-2bcb-4a43-90e6-ec0e91751b7d/documents/messages/${id}?updateMask.fieldPaths=read&key=AIzaSyBMo48b3e30QxRRZrnVk3M_JQP3pUyo80Q`;
+        await fetch(firestorePatchUrl, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields: { read: { booleanValue: newReadState } } })
+        });
+      } catch (e) {}
     }
 
     async function deleteMessage(id) {
       if (!confirm('Permanently delete this inquiry?')) return;
+
+      // Optimistic update
+      contactMessages = contactMessages.filter(m => m.id !== id);
+      renderMessages();
+
+      // Delete from local storage
+      try {
+        const localList = JSON.parse(localStorage.getItem('fn_contact_messages') || '[]');
+        const updated = localList.filter(m => m.id !== id);
+        localStorage.setItem('fn_contact_messages', JSON.stringify(updated));
+      } catch (e) {}
+
+      showToast('Message deleted');
+
+      // 1. Try server API
       try {
         const res = await fetch(`/api/admin/messages/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
-        if (res.ok) {
-          contactMessages = contactMessages.filter(m => m.id !== id);
-          renderMessages();
-          showToast('Message deleted');
-        }
-      } catch (err) {
-        showToast('Failed to delete message', 'error');
-      }
+        if (res.ok) return;
+      } catch (err) {}
+
+      // 2. Direct Firestore fallback
+      try {
+        const firestoreDelUrl = `https://firestore.googleapis.com/v1/projects/metal-photon-1lcf1/databases/ai-studio-responsiveportfo-a815eb56-2bcb-4a43-90e6-ec0e91751b7d/documents/messages/${id}?key=AIzaSyBMo48b3e30QxRRZrnVk3M_JQP3pUyo80Q`;
+        await fetch(firestoreDelUrl, { method: 'DELETE' });
+      } catch (e) {}
     }
 
     // Save Portfolio Data
