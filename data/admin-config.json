@@ -1,7 +1,7 @@
 {
   "adminUsername": "admin",
   "adminEmail": "furqannaveed377@gmail.com",
-  "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+  "passwordHash": "44f83400b35a4b5023241b27d3990d9bbec885aadcbd59c2811d10550e73b226",
   "passwordHint": "admin123",
   "salt": "fn_portfolio_salt_2026",
   "activeSessions": [
@@ -70,6 +70,18 @@
       "username": "admin",
       "createdAt": "2026-09-16T05:49:58.603Z",
       "expiresAt": "2026-09-23T05:49:58.603Z"
+    },
+    {
+      "token": "YWRtaW46MTc5MDE0MzEyNzkxMg.e6baa092d4eb6097aabf54a528d97a12f110034c8a9d22fa2ff8e7a1d9ca70f4",
+      "username": "admin",
+      "createdAt": "2026-09-16T05:58:47.913Z",
+      "expiresAt": "2026-09-23T05:58:47.913Z"
+    },
+    {
+      "token": "YWRtaW46MTc5MDE0MzEzNDgwOA.3026ae90c80d92d4c6b63a8647d1e30eb59ec975e4f5727b096f10879e7fbe91",
+      "username": "admin",
+      "createdAt": "2026-09-16T05:58:54.809Z",
+      "expiresAt": "2026-09-23T05:58:54.809Z"
     }
   ]
 }
