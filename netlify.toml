@@ -2,11 +2,16 @@
   publish = "."
   functions = "netlify/functions"
 
-# === YEH BLOCK ADD KIYA HAI ===
-# Yeh Netlify ko batayega ke functions ke sath data folder bhi server par bhejna hai
 [functions]
-  included_files = ["data/**"]
-# ==============================
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["data/**", "firebase-applet-config.json"]
+
+# Serve data files directly (static JSON)
+[[redirects]]
+  from = "/data/*"
+  to = "/data/:splat"
+  status = 200
 
 # API routes routed to Netlify Serverless Node.js function
 [[redirects]]

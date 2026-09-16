@@ -5,9 +5,13 @@ export async function handler(event, context) {
   // Extract path and clean it
   let pathname = event.path || '';
 
-  // In Netlify redirects, path might be /.netlify/functions/api/... or /api/...
-  if (!pathname.startsWith('/api')) {
+  // In Netlify redirects, path might be /.netlify/functions/api/... or /api/... or /admin/...
+  if (pathname.includes('/.netlify/functions/api')) {
     pathname = pathname.replace(/^\/\.netlify\/functions\/api/, '/api');
+  } else if (pathname.includes('/functions/api')) {
+    pathname = pathname.replace(/^.*\/functions\/api/, '/api');
+  } else if (!pathname.startsWith('/api')) {
+    pathname = '/api' + (pathname.startsWith('/') ? pathname : '/' + pathname);
   }
 
   // Parse request body
@@ -16,7 +20,7 @@ export async function handler(event, context) {
     try {
       body = event.isBase64Encoded
         ? JSON.parse(Buffer.from(event.body, 'base64').toString('utf-8'))
-        : JSON.parse(event.body);
+        : (typeof event.body === 'string' ? JSON.parse(event.body) : event.body);
     } catch (err) {
       body = event.body;
     }

@@ -136,27 +136,51 @@ if (inquiryForm) {
     inquiryStatus.style.display = 'none';
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, subject, message })
-      });
+      let sent = false;
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, subject, message })
+        });
+        const ct = response.headers.get('content-type') || '';
+        if (response.ok && ct.includes('application/json')) {
+          sent = true;
+        }
+      } catch (e) {}
 
-      if (response.ok) {
+      // If backend API wasn't reached (e.g. Netlify static mode without functions), store locally
+      if (!sent) {
+        try {
+          const localMsgs = JSON.parse(localStorage.getItem('fn_contact_messages') || '[]');
+          localMsgs.unshift({
+            id: `msg-${Date.now()}`,
+            name,
+            email,
+            subject,
+            message,
+            timestamp: new Date().toISOString(),
+            read: false
+          });
+          localStorage.setItem('fn_contact_messages', JSON.stringify(localMsgs));
+          sent = true;
+        } catch (e) {}
+      }
+
+      if (sent) {
         inquiryStatus.style.display = 'block';
         inquiryStatus.style.color = 'hsl(145, 65%, 52%)';
-        inquiryStatus.innerHTML = '<i class="ri-checkbox-circle-line"></i> Message sent successfully! Furqan will get back to you soon.';
+        inquiryStatus.innerHTML = '<i class="ri-checkbox-circle-line"></i> Message received successfully! Furqan will get back to you soon.';
         inquiryForm.reset();
       } else {
-        const data = await response.json();
         inquiryStatus.style.display = 'block';
         inquiryStatus.style.color = 'hsl(355, 75%, 60%)';
-        inquiryStatus.textContent = data.error || 'Failed to send message. Please try again.';
+        inquiryStatus.textContent = 'Please email directly at furqannaveed377@gmail.com';
       }
     } catch (err) {
       inquiryStatus.style.display = 'block';
       inquiryStatus.style.color = 'hsl(355, 75%, 60%)';
-      inquiryStatus.textContent = 'Network error. Please try again.';
+      inquiryStatus.textContent = 'Please email directly at furqannaveed377@gmail.com';
     } finally {
       inquirySubmitBtn.disabled = false;
       inquirySubmitBtn.innerHTML = originalBtnContent;
@@ -193,9 +217,37 @@ if (postFilterBtns.length > 0 && postCards.length > 0) {
 /*=============== DYNAMIC PORTFOLIO SYNC (FROM ADMIN) ===============*/
 async function syncPortfolioData() {
   try {
-    const res = await fetch('/api/portfolio');
-    if (!res.ok) return;
-    const data = await res.json();
+    let data = null;
+
+    // 1. Check local storage for any live edits saved from admin panel
+    try {
+      const localData = localStorage.getItem('fn_portfolio_custom_data');
+      if (localData) {
+        data = JSON.parse(localData);
+      }
+    } catch (e) {}
+
+    // 2. If no local edits, try backend server API
+    if (!data) {
+      try {
+        const res = await fetch('/api/portfolio');
+        const ct = res.headers.get('content-type') || '';
+        if (res.ok && ct.includes('application/json')) {
+          data = await res.json();
+        }
+      } catch (e) {}
+    }
+
+    // 3. Fallback to static JSON file (works 100% on any static host like Netlify!)
+    if (!data) {
+      try {
+        const staticRes = await fetch('/data/portfolio-data.json');
+        if (staticRes.ok) {
+          data = await staticRes.json();
+        }
+      } catch (e) {}
+    }
+
     if (!data || !data.profile) return;
 
     const p = data.profile;

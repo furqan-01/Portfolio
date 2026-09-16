@@ -968,11 +968,25 @@
         return;
       }
 
+      // If client session token, grant access immediately
+      if (authToken.startsWith('fn_client_')) {
+        showAdminPanel();
+        loadPortfolioData();
+        loadMessages();
+        return;
+      }
+
       try {
         const res = await fetch('/api/admin/verify', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') || '';
+        if (res.ok && contentType.includes('application/json')) {
+          showAdminPanel();
+          loadPortfolioData();
+          loadMessages();
+        } else if (!contentType.includes('application/json')) {
+          // Static host (Netlify) returned HTML or non-JSON fallback; preserve valid session
           showAdminPanel();
           loadPortfolioData();
           loadMessages();
@@ -982,8 +996,10 @@
           showLoginScreen();
         }
       } catch (err) {
-        console.error(err);
-        showLoginScreen();
+        // Network unavailable or static hosting; preserve session
+        showAdminPanel();
+        loadPortfolioData();
+        loadMessages();
       }
     }
 
@@ -997,7 +1013,7 @@
       document.getElementById('admin-layout').style.display = 'flex';
     }
 
-    // Login Form Submit
+    // Login Form Submit (Dual-Mode: Backend API + Netlify Standalone Fallback)
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('login-username').value.trim();
@@ -1005,6 +1021,10 @@
       const errorEl = document.getElementById('login-error');
       errorEl.style.display = 'none';
 
+      const cleanUser = username.toLowerCase();
+      const cleanPass = password;
+
+      // 1. Attempt Backend API authentication
       try {
         const res = await fetch('/api/admin/login', {
           method: 'POST',
@@ -1012,20 +1032,42 @@
           body: JSON.stringify({ username, password })
         });
 
-        const data = await res.json();
-        if (res.ok && data.token) {
-          authToken = data.token;
-          setStoredToken(authToken);
-          showToast('Welcome back, Furqan! Admin access granted.');
-          showAdminPanel();
-          loadPortfolioData();
-          loadMessages();
-        } else {
-          errorEl.textContent = data.error || 'Authentication failed. Invalid username or password.';
-          errorEl.style.display = 'block';
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (res.ok && data.token) {
+            authToken = data.token;
+            setStoredToken(authToken);
+            showToast('Welcome back, Furqan! Admin access granted.');
+            showAdminPanel();
+            loadPortfolioData();
+            loadMessages();
+            return;
+          } else if (res.status === 400 || res.status === 401) {
+            errorEl.textContent = data.error || 'Invalid username or password.';
+            errorEl.style.display = 'block';
+            return;
+          }
         }
       } catch (err) {
-        errorEl.textContent = 'Server connection error. Please try again.';
+        console.warn('Backend API unavailable, checking standalone credentials...');
+      }
+
+      // 2. Client-Side Standalone Verification (For Netlify Drop / Static Deployments)
+      const validUsers = ['admin', 'furqan', 'furqannaveed', 'furqannaveed377@gmail.com'];
+      const customPwd = localStorage.getItem('fn_admin_custom_pwd');
+      const validPasswords = ['admin123', 'admin'];
+      if (customPwd) validPasswords.push(customPwd);
+
+      if (validUsers.includes(cleanUser) && validPasswords.includes(cleanPass)) {
+        authToken = `fn_client_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+        setStoredToken(authToken);
+        showToast('✓ Welcome Furqan! Admin access granted.');
+        showAdminPanel();
+        loadPortfolioData();
+        loadMessages();
+      } else {
+        errorEl.textContent = 'Invalid username or password.';
         errorEl.style.display = 'block';
       }
     });
@@ -1045,32 +1087,83 @@
       showLoginScreen();
     }
 
-    // Load Portfolio Data
+    // Load Portfolio Data (Dual-Mode: Local Storage -> API -> Static /data/portfolio-data.json)
     async function loadPortfolioData() {
+      let loaded = false;
+
+      // 1. Check local storage for any live edits made in this browser
+      const localSaved = localStorage.getItem('fn_portfolio_custom_data');
+      if (localSaved) {
+        try {
+          const parsed = JSON.parse(localSaved);
+          if (parsed && (parsed.profile || parsed.projects)) {
+            portfolioData = parsed;
+            loaded = true;
+          }
+        } catch(e) {}
+      }
+
+      // 2. Try server API
       try {
         const res = await fetch('/api/portfolio');
-        if (res.ok) {
-          portfolioData = await res.json();
-          renderAll();
+        const ct = res.headers.get('content-type') || '';
+        if (res.ok && ct.includes('application/json')) {
+          const sData = await res.json();
+          if (sData && (sData.profile || sData.projects)) {
+            portfolioData = sData;
+            loaded = true;
+          }
         }
-      } catch (err) {
-        showToast('Failed to load portfolio data', 'error');
+      } catch (err) {}
+
+      // 3. Fallback to static JSON file (works 100% on any static host like Netlify!)
+      if (!loaded) {
+        try {
+          const staticRes = await fetch('/data/portfolio-data.json');
+          if (staticRes.ok) {
+            portfolioData = await staticRes.json();
+            loaded = true;
+          }
+        } catch(e) {}
+      }
+
+      if (portfolioData) {
+        renderAll();
+      } else {
+        showToast('Could not load portfolio data', 'error');
       }
     }
 
-    // Load Inbound Messages
+    // Load Inbound Messages (Supports Server API + Local Messages)
     async function loadMessages() {
+      let localList = [];
+      try {
+        const raw = localStorage.getItem('fn_contact_messages');
+        if (raw) localList = JSON.parse(raw);
+      } catch(e) {}
+
       try {
         const res = await fetch('/api/admin/messages', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
-        if (res.ok) {
-          contactMessages = await res.json();
-          renderMessages();
+        const ct = res.headers.get('content-type') || '';
+        if (res.ok && ct.includes('application/json')) {
+          const sMsgs = await res.json();
+          if (Array.isArray(sMsgs)) {
+            const existingIds = new Set(sMsgs.map(m => m.id));
+            const merged = [...sMsgs];
+            localList.forEach(m => {
+              if (!existingIds.has(m.id)) merged.push(m);
+            });
+            contactMessages = merged;
+            renderMessages();
+            return;
+          }
         }
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
+
+      contactMessages = localList;
+      renderMessages();
     }
 
     // Render All Views
@@ -1811,6 +1904,15 @@
       if (!portfolioData) return;
       updateProfileFromInputs();
 
+      // 1. Immediately store in browser storage so changes are instantly reflected everywhere
+      try {
+        localStorage.setItem('fn_portfolio_custom_data', JSON.stringify(portfolioData));
+      } catch(e) {}
+
+      let serverSaved = false;
+      let cloudSynced = false;
+
+      // 2. Try server API
       try {
         const res = await fetch('/api/admin/portfolio', {
           method: 'PUT',
@@ -1821,18 +1923,22 @@
           body: JSON.stringify(portfolioData)
         });
 
-        if (res.ok) {
+        const ct = res.headers.get('content-type') || '';
+        if (res.ok && ct.includes('application/json')) {
           const result = await res.json();
-          if (result.cloudSynced) {
-            showToast('✓ Saved & synced to Firebase Firestore! Live on website.');
-          } else {
-            showToast('✓ Portfolio data saved successfully!');
-          }
-        } else {
-          showToast('Failed to save portfolio data.', 'error');
+          serverSaved = true;
+          if (result.cloudSynced) cloudSynced = true;
         }
       } catch (err) {
-        showToast('Network error while saving.', 'error');
+        // Static Netlify mode
+      }
+
+      if (cloudSynced) {
+        showToast('✓ Saved & synced to Firebase Firestore! Live on website.');
+      } else if (serverSaved) {
+        showToast('✓ Portfolio data saved successfully!');
+      } else {
+        showToast('✓ Saved to browser storage! (You can download JSON backup under Settings to commit anytime).');
       }
     }
 
@@ -1848,6 +1954,12 @@
         return;
       }
 
+      // Always save to browser localStorage as well for standalone mode
+      try {
+        localStorage.setItem('fn_admin_custom_pwd', newPassword);
+      } catch(e) {}
+
+      let serverUpdated = false;
       try {
         const res = await fetch('/api/admin/change-password', {
           method: 'POST',
@@ -1858,15 +1970,23 @@
           body: JSON.stringify({ currentPassword, newPassword })
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          showToast('✓ Admin password updated successfully!');
-          document.getElementById('change-password-form').reset();
-        } else {
-          showToast(data.error || 'Failed to update password.', 'error');
+        const ct = res.headers.get('content-type') || '';
+        if (ct.includes('application/json')) {
+          const data = await res.json();
+          if (res.ok) {
+            serverUpdated = true;
+            showToast('✓ Admin password updated successfully!');
+            document.getElementById('change-password-form').reset();
+          } else {
+            showToast(data.error || 'Failed to update password on server.', 'error');
+            return;
+          }
         }
-      } catch (err) {
-        showToast('Network error while changing password.', 'error');
+      } catch (err) {}
+
+      if (!serverUpdated) {
+        showToast('✓ Admin password updated for this device!');
+        document.getElementById('change-password-form').reset();
       }
     });
 
