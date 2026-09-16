@@ -2,6 +2,12 @@
   publish = "."
   functions = "netlify/functions"
 
+# === YEH BLOCK ADD KIYA HAI ===
+# Yeh Netlify ko batayega ke functions ke sath data folder bhi server par bhejna hai
+[functions]
+  included_files = ["data/**"]
+# ==============================
+
 # API routes routed to Netlify Serverless Node.js function
 [[redirects]]
   from = "/api/*"
